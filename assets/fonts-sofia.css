@@ -1,0 +1,84 @@
+/** EINBINDUNG FONT-FAMILY SOFIA */
+
+@font-face{
+    font-family:"Sofia Ultra Light";
+    src:url("4cc1db84-1de9-4f82-9a3a-fcd3b3edafc2.woff2") format("woff2"),url("3c143676-a1d2-4b89-a929-3842ef82e2f4.woff") format("woff");
+    font-display: swap;
+  }
+  @font-face{
+    font-family:"Sofia Ultra Light italic";
+    src:url("37176c2a-c397-4baa-aa4e-0780d6dc10a9.woff2") format("woff2"),url("bc0e2890-008c-4843-9a83-843533277466.woff") format("woff");
+    font-display: swap;
+  }
+  @font-face{
+    font-family:"Sofia Extra Light";
+    src:url("63fc7e66-492f-4a2c-b954-ee6ff6aeebd0.woff2") format("woff2"),url("eb10a050-1068-4bfd-9469-ce8b6f9ffddc.woff") format("woff");
+    font-display: swap;
+  }
+  @font-face{
+    font-family:"Sofia Extra Light italic";
+    src:url("c6664b97-3cf3-4307-8317-57be876469dd.woff2") format("woff2"),url("934dbcf8-1de7-41e6-91eb-9ecd71c9c22a.woff") format("woff");
+    font-display: swap;
+  }
+  @font-face{
+    font-family:"Sofia Black";
+    src:url("4a522e7b-6544-4478-9ecf-dd10d1dd7dce.woff2") format("woff2"),url("a1bc5f87-12fd-4800-a34e-1f9ffd90e8b2.woff") format("woff");
+    font-display: swap;
+  }
+  @font-face{
+    font-family:"Sofia Light";
+    src:url("38c4b523-4e43-4b42-a420-0d4a26ab6570.woff2") format("woff2"),url("88703776-d067-483d-a7ef-eb92e18e1e2f.woff") format("woff");
+    font-display: swap;
+  }
+  @font-face{
+    font-family:"Sofia Light italic";
+    src:url("298f0010-3ad2-47ce-a19e-f0bf6f34f986.woff2") format("woff2"),url("07c6c796-9166-4035-a93a-66aaf90a3879.woff") format("woff");
+    font-display: swap;
+  }
+  @font-face{
+    font-family:"Sofia Black italic";
+    src:url("b726bed4-bc38-4d05-8415-0d4add9be489.woff2") format("woff2"),url("2180a998-0a84-4b01-9063-d71307140a94.woff") format("woff");
+    font-display: swap;
+  }
+  @font-face{
+    font-family:"Sofia Regular";
+    src:url("59126a0b-e705-46db-9155-40987bcff7ec.woff2") format("woff2"),url("af93f855-77b2-404e-9c6d-f3c723a86b0a.woff") format("woff");
+    font-display: swap;
+  }
+  @font-face{
+    font-family:"Sofia Regular italic";
+    src:url("99aca8d4-6608-487c-81b7-c6a62ef0b075.woff2") format("woff2"),url("8b8d06cd-1f20-4856-ba5b-d3485ed5c5b4.woff") format("woff");
+    font-display: swap;
+  }
+  @font-face{
+    font-family:"Sofia Medium";
+    src:url("f9bb2326-7553-48f9-bcaa-e914578b932a.woff2") format("woff2"),url("8e4cebd4-3a5a-4339-a3bf-092faba27a42.woff") format("woff");
+    font-display: swap;
+  }
+  @font-face{
+    font-family:"Sofia Medium italic";
+    src:url("4c07e4d0-492f-4da5-bcfd-26de1c1f1ea5.woff2") format("woff2"),url("a0ffa9bf-425e-4622-ad25-113879144c84.woff") format("woff");
+    font-display: swap;
+  }
+  @font-face{
+    font-family:"Sofia Semi Bold";
+    src:url("5cef7075-5701-40ad-b51e-d4e00c2e409a.woff2") format("woff2"),url("cb6e9989-74e9-4888-b365-72cfb091eac3.woff") format("woff");
+    font-display: swap;
+  }
+  @font-face{
+    font-family:"Sofia Semi Bold italic";
+    src:url("03585868-3822-4b65-b3bc-96d3efb16cee.woff2") format("woff2"),url("ada8a0b3-209a-4600-8dc3-e9ffccaad55c.woff") format("woff");
+    font-display: swap;
+  }
+  @font-face{
+    font-family:"Sofia Bold";
+    src:url("4947c40a-1afd-4e93-89b7-5a55eabb44af.woff2") format("woff2"),url("ea451c70-4028-4312-b766-10d2a20a178f.woff") format("woff");
+    font-display: swap;
+  }
+  @font-face{
+    font-family:"Sofia Bold italic";
+    src:url("f2cf0304-e82b-43ff-a102-07052a5b640b.woff2") format("woff2"),url("a1770c67-119d-46ac-a064-9499671a75cf.woff") format("woff");
+    font-display: swap;
+  }
+  
+  /** ENDE EINBINDUNG FONT-FAMILY SOFIA */

@@ -1,0 +1,445 @@
+{% if section.settings.cart_discount_toggle == "regular_discount" %}
+    {% assign cart_discounts_array = section.blocks | where: "type", "cart-discount" | map: "settings" | sort: "rabatt-anzahl" | json %}
+  
+{% elsif section.settings.cart_discount_toggle == "black_friday_discount" %}
+    {% assign cart_discounts_array = section.blocks | where: "type", "black-friday-discount" | map: "settings" | sort: "rabatt-anzahl" | json %}
+    
+{% endif %}
+
+{%- render 'cart-drawer' -%}
+
+<style>
+  .oldprice{
+    color: {{section.settings.alter_preis_color}};
+    text-decoration: line-through;
+  }
+
+  .newprice{
+    color: {{section.settings.neuer_preis_color}};
+  }
+
+  .dicount_notice_text{
+    color: {{section.settings.rabatt_text_color}};
+  }
+</style>
+
+<script>
+
+    window.discount_levels = {{cart_discounts_array}};
+
+  function formatNumber(number) {
+    const parts = number.toString().split('.');
+    const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const decimalPart = parts[1] || '00'; // Add two decimal places if not present
+  
+    return `${integerPart},${decimalPart}`;
+  }
+
+  function cart_discounts_init(){
+    $(document).ready(function() {
+    // Init as much values as we can now, other "null" values will be written in further processing
+    window.cart_discount = {
+    "total_discount_items" : 0,
+    "under_min" : false,
+    "about_max" : false ,
+    "applicable_discount_level_index" : null ,
+    "saved_money" : 0,
+    "text1_min": `{{section.settings.text_min1}}`,
+    "text2_min": `{{section.settings.text_min2}}`,
+    "text1_max": `{{section.settings.text_bei_max_rabatt_erreicht1}}`,
+    "text2_max": `{{section.settings.text_bei_max_rabatt_erreicht2}}`,
+    "cart_line1": ``,
+    "cart_line2": ``,
+    "discount_code" : `none`
+    };
+
+    // Get discount applicable item count
+    for(d=0; d<$(".CartItemWrapper").length; d++){
+      var discount_allowed = $(".CartItem__Info")[d].dataset.discount_allowed;
+      if (discount_allowed == "true"){
+        window.cart_discount.total_discount_items = window.cart_discount.total_discount_items + parseInt($(".CartItem__Info")[d].dataset.item_qty);
+      }
+    }
+    // SET "under_min" and "about_max" --> Check if total discount items is under min or above max
+    if (window.cart_discount.total_discount_items < window.discount_levels[0]["rabatt-anzahl"]){
+        window.cart_discount.under_min = true;
+        window.cart_discount.about_max = false;
+      }
+    if (window.cart_discount.total_discount_items >= window.discount_levels[window.discount_levels.length-1]["rabatt-anzahl"]){
+        window.cart_discount.about_max = true;
+        window.cart_discount.under_min = false;
+      }
+
+    // Check which discount level applies right now
+    for (i=0 ; i<window.discount_levels.length ; i++){
+      if (window.cart_discount.about_max == false && window.cart_discount.under_min == false){
+        if (window.cart_discount.total_discount_items >= window.discount_levels[i]["rabatt-anzahl"] && window.cart_discount.total_discount_items < window.discount_levels[i+1]["rabatt-anzahl"]){
+          window.cart_discount.applicable_discount_level_index = i;
+          break;
+        }
+      }else if(window.cart_discount.about_max == true){
+        window.cart_discount.applicable_discount_level_index = "max";
+        break;
+      }else if(window.cart_discount.under_min == true){
+        window.cart_discount.applicable_discount_level_index = "min";
+      }
+  }
+  manipulate_cart()
+});
+}
+
+
+function manipulate_cart(){
+
+      // Change Cart Text
+switch(true) {
+  case window.cart_discount.applicable_discount_level_index == "max":
+    window.cart_discount.cart_line1 = replace_variables(window.cart_discount.text1_max);
+    window.cart_discount.cart_line2 = replace_variables(window.cart_discount.text2_max);
+    window.cart_discount.discount_code = window.discount_levels[window.discount_levels.length-1]["rabattcode"];
+    break;
+  case window.cart_discount.applicable_discount_level_index == "min":
+    window.cart_discount.cart_line1 = replace_variables(window.cart_discount.text1_min);
+    window.cart_discount.cart_line2 = replace_variables(window.cart_discount.text2_min);
+    break;
+  case typeof window.cart_discount.applicable_discount_level_index == "number":
+    window.cart_discount.cart_line1 = replace_variables(window.discount_levels[window.cart_discount.applicable_discount_level_index]["hinweis1"]);
+    window.cart_discount.cart_line2 = replace_variables(window.discount_levels[window.cart_discount.applicable_discount_level_index]["hinweis2"]);
+    window.cart_discount.discount_code = window.discount_levels[window.cart_discount.applicable_discount_level_index]["rabattcode"];
+    break;
+}
+
+  if (window.cart_discount.under_min != true ){
+    if (typeof window.cart_discount.applicable_discount_level_index == 'number'){
+    var discount_factor = parseFloat((100 - window.discount_levels[window.cart_discount.applicable_discount_level_index]["rabatt-wert"]) /100).toFixed(2);
+    }else if (window.cart_discount.applicable_discount_level_index == "max"){
+      var discount_factor = parseFloat((100 - window.discount_levels[window.discount_levels.length-1]["rabatt-wert"]) /100).toFixed(2);
+    }
+    for(i=0; i<$(".CartItemWrapper").length; i++){
+      var discount_allowed = $(".CartItem__Info")[i].dataset.discount_allowed;
+      if(discount_allowed == "true"){
+        var item_original_price = parseFloat($(".CartItem__Info")[i].dataset.original_price_per_piece)/100;
+        var item_original_price_all = parseFloat($(".CartItem__Info")[i].dataset.original_price_all)/100;
+        var discounted_new_item_price = parseFloat((item_original_price * discount_factor));
+        var discounted_new_item_original_price_all = parseFloat((item_original_price_all * discount_factor));
+        window.cart_discount.saved_money = parseFloat((window.cart_discount.saved_money + (item_original_price_all - discounted_new_item_original_price_all)).toFixed(2));
+
+        //Manipulate DOM Elements
+        var line_items_discount = discounted_new_item_price.toFixed(2);
+        $(".CartItem__Info")[i].querySelector("#item_discounted_price").innerHTML = "€ " + formatNumber(line_items_discount);
+        if(window.cart_discount.discount_code != "none"){
+          $(".CartItem__Info")[i].querySelector(".CartItem__DiscountList li").classList.remove("hidden");
+          $(".CartItem__Info")[i].querySelector(".CartItem__DiscountList li span").innerHTML= `${window.cart_discount.discount_code}:-€${formatNumber(window.cart_discount.saved_money)}`;
+        }
+      }
+    }
+  }
+
+      document.querySelectorAll('[data-discount_allowed="true"]').forEach(item=>{
+        if(window.cart_discount.total_discount_items >= 2){
+           item.querySelector("#item_original_price").classList.add("Price--compareAt");
+        }
+      })
+
+
+
+
+
+change_cart_texts();
+
+}
+
+function change_cart_texts(){
+  $("#line1").html(window.cart_discount.cart_line1);
+  $("#line2").html(window.cart_discount.cart_line2);
+
+  if (window.cart_discount.discount_code == "none"){
+    $("#zum_checkout").replaceWith(`<button id="zum_checkout" onclick="checkout_init_page()" type="submit" name="checkout" class="Cart__Checkout Button Button--primary Button--full">
+          <span>{{- 'cart.general.checkout' | t -}}</span>
+        </button>`);
+  }else{
+    $("#zum_checkout").replaceWith(`<a href="{{ shop.url }}/discount/`+ window.cart_discount.discount_code +`?redirect=/checkout" id="zum_checkout" onclick="checkout_init_page()" class="Cart__Checkout Button Button--primary Button--full">
+          <span>{{- 'cart.general.checkout' | t -}}</span>
+        </a>`);
+  }
+
+  if (window.cart_discount.saved_money > 0){
+    var discounted_subtotal = (parseFloat($("#cart_subtotal_original")[0].dataset.subtotal)/100).toFixed(2);
+    $("#cart_subtotal_original").addClass("oldprice");
+    $("#cart_subtotal_discounted").html("€" + formatNumber(((discounted_subtotal - window.cart_discount.saved_money).toFixed(2))));
+  }
+
+}
+
+function replace_variables(notice_text){
+  var anzahlprodukte = window.cart_discount.total_discount_items;
+  var output = notice_text;
+
+  if (typeof window.cart_discount.applicable_discount_level_index == 'number'){
+    var rabattjetzt = window.discount_levels[window.cart_discount.applicable_discount_level_index]["rabatt-wert"];
+    var anzahlbisnextrabatt = window.discount_levels[window.cart_discount.applicable_discount_level_index+1]["rabatt-anzahl"]-anzahlprodukte;
+    var nextrabatt = window.discount_levels[window.cart_discount.applicable_discount_level_index+1]["rabatt-wert"];
+  }else if(window.cart_discount.applicable_discount_level_index == "max"){
+    var rabattjetzt = window.discount_levels[window.discount_levels.length-1]["rabatt-wert"];
+    var anzahlbisnextrabatt = ``;
+    var nextrabatt = ``;
+  }else if(window.cart_discount.applicable_discount_level_index == "min"){
+    var rabattjetzt = window.discount_levels[0]["rabatt-wert"];
+    var anzahlbisnextrabatt = window.discount_levels[0]["rabatt-anzahl"]-anzahlprodukte;
+    var nextrabatt = window.discount_levels[0]["rabatt-wert"];
+  }
+
+  var output =
+  output
+  .replace("((rabattjetzt))", rabattjetzt)
+  .replace("((anzahlprodukte))", anzahlprodukte )
+  .replace("((anzahlbisnextrabatt))", anzahlbisnextrabatt )
+  .replace("((nextrabatt))", nextrabatt );
+
+  return output;
+}
+
+</script>
+
+
+{% schema %}
+{
+  "name": "Mini-cart",
+  "settings": [
+  {
+    "type": "header",
+    "content":"\/\/\/\/\/\/\/\/\/\/CART-UPSELL\/\/\/\/\/\/\/\/\/\/"
+    },
+  {
+    "type": "checkbox",
+    "id": "enable_upsell",
+    "label": "Enable Upsell",
+    "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "upsell-autoplay",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "type": "number",
+      "id": "cart-upsell-autoplay-delay",
+      "label": "Autoplay Intervall in ms (1s = 1000ms)",
+      "default": 2000
+    },
+    {
+      "type": "color",
+      "id": "upsell-background",
+      "label": "Slider-Karten Hintergrundfarbe",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Texte"
+    },
+    {
+      "type": "text",
+      "id": "upsell_text",
+      "label": "Upsell-Text"
+    },
+    {
+      "type": "text",
+      "id": "upsell_icon",
+      "label": "Upsell Button Icon",
+      "default": "plus-circle",
+      "info": "Font-Awesome Icons (Klasse fa)"
+    },
+    {
+      "type": "header",
+      "content": "\/\/\/\/\/\/\/\/\/\/Cart-Discounts\/\/\/\/\/\/\/\/\/\/"
+    },
+      {
+        "type": "radio",
+        "id": "cart_discount_toggle",
+        "label": "Cart Discount",
+        "options": [
+          {
+            "value": "black_friday_discount",
+            "label": "Black Friday Discount"
+          },
+          {
+            "value": "regular_discount",
+            "label": "Regular Discount"
+          }
+        ],
+        "default": "regular_discount"
+      },
+    {
+      "type": "color",
+      "id": "rabatt_text_color",
+      "label": "Text Farbe",
+      "default": "#f00"
+    },
+    {
+      "type": "color",
+      "id": "neuer_preis_color",
+      "label": "Farbe NEUER Preis",
+      "default": "#00ff00"
+    },
+    {
+      "type": "color",
+      "id": "alter_preis_color",
+      "label": "Farbe ALTER Preis",
+      "default": "#f00"
+    },
+    {
+      "type": "header",
+      "content": "Wenn KEIN Rabatt möglich"
+    },
+    {
+      "type": "textarea",
+      "id": "text_min1",
+      "label": "Du hast XXX berechtigte Produkte...",
+      "default": "Wichtig: Du hast ((anzahlprodukte)) Aktionsprodukt im Warenkorb.",
+      "info": "Variablen: ((anzahlprodukte)) ; ((rabattjetzt))"
+    },
+    {
+      "type": "textarea",
+      "id": "text_min2",
+      "label": "Kaufe noch xxx und erhalte xxx % ",
+      "default": "Füge noch ((anzahlbisnextrabatt)) hinzu und erhalte ((nextrabatt)) Rabatt.",
+      "info": "Variablen: ((anzahlbisnextrabatt)) ; ((nextrabatt))"
+    },
+    {
+      "type": "header",
+      "content": "Wenn MAXIMAL Rabatt erreicht"
+    },
+    {
+      "type": "richtext",
+      "id": "text_bei_max_rabatt_erreicht1",
+      "label": "Text, wenn Max. an Rabatt erreicht wurde Zeile 1",
+      "default": "<p>Herzlichen Glückwunsch!<p>"
+    },
+    {
+      "type": "richtext",
+      "id": "text_bei_max_rabatt_erreicht2",
+      "label": "Text, wenn Max. an Rabatt erreicht wurde Zeile 2",
+      "default": "<p>Du hast den maximalen Rabatt erreicht!<p>"
+    }
+    ],
+    "blocks": [
+    {
+      "type": "upsell-product",
+      "name": "Upsell Produkt",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product_handle",
+          "label": "Produkt"
+        },
+        {
+            "type": "textarea",
+            "id": "product_title",
+            "label": "Produkt-Titel",
+            "info": "Wenn leer, wird Standard-Produkt Titel verwendet. Unterstützt auch HTML-Codierungen!"
+        }
+      ]
+    },
+    {
+      "type": "exception-collection",
+      "name": "Exception Collection",
+      "settings": [
+      {
+        "type": "collection",
+        "id": "exception_collection",
+        "label": "Ausnahmekategorie auswählen"
+      }
+      ]
+    },
+    {
+      "type": "cart-discount",
+      "name": "Cart Discount",
+      "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Name der Rabattstufe",
+        "info": "Geben Sie diesem Block einen Namen, damit Sie die Übersicht nicht verlieren.",
+        "default": "Rabattstufe X"
+      },
+      {
+        "type": "number",
+        "id": "rabatt-anzahl",
+        "label": "Ab ... Artikel",
+        "info": "Rabatt gilt Einschliesslich dieser Anzahl"
+      },
+      {
+        "type": "number",
+        "id": "rabatt-wert",
+        "label": "Wieviel % Rabatt?"
+      },
+      {
+        "type": "text",
+        "id": "rabattcode",
+        "label": "Rabattcode eingeben!",
+        "info": "Bitte erstellen Sie entsprechend ein Rabattcode im Admin-Bereich. Legen Sie entsprechende Regeln bitte auch dort fest."
+      },
+      {
+        "type": "textarea",
+        "id": "hinweis1",
+        "label": "Hinweistext 1",
+        "default": "Klasse: Du hast ((anzahlprodukte)) Aktionsprodukte im Warenkorb und erhälst automatisch ((rabattjetzt)) Rabatt.",
+        "info": "Variablen: ((anzahlprodukte)) ; ((rabattjetzt))"
+      },
+      {
+        "type": "textarea",
+        "id": "hinweis2",
+        "label": "Kaufe noch xxx und erhalte xxx % ",
+        "default": "Füge noch ((anzahlbisnextrabatt)) hinzu und erhalte ((nextrabatt)) Rabatt.",
+        "info": "Variablen: ((anzahlbisnextrabatt)) ; ((nextrabatt))"
+      }
+      ]
+    }, 
+    {
+      "type": "black-friday-discount",
+      "name": "Black Friday Discount",
+      "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Name der Rabattstufe",
+        "info": "Geben Sie diesem Block einen Namen, damit Sie die Übersicht nicht verlieren.",
+        "default": "Rabattstufe X"
+      },
+      {
+        "type": "number",
+        "id": "rabatt-anzahl",
+        "label": "Ab ... Artikel",
+        "info": "Rabatt gilt Einschliesslich dieser Anzahl"
+      },
+      {
+        "type": "number",
+        "id": "rabatt-wert",
+        "label": "Wieviel % Rabatt?"
+      },
+      {
+        "type": "text",
+        "id": "rabattcode",
+        "label": "Rabattcode eingeben!",
+        "info": "Bitte erstellen Sie entsprechend ein Rabattcode im Admin-Bereich. Legen Sie entsprechende Regeln bitte auch dort fest."
+      },
+      {
+        "type": "textarea",
+        "id": "hinweis1",
+        "label": "Hinweistext 1",
+        "default": "Klasse: Du hast ((anzahlprodukte)) Aktionsprodukte im Warenkorb und erhälst automatisch ((rabattjetzt)) Rabatt.",
+        "info": "Variablen: ((anzahlprodukte)) ; ((rabattjetzt))"
+      },
+      {
+        "type": "textarea",
+        "id": "hinweis2",
+        "label": "Kaufe noch xxx und erhalte xxx % ",
+        "default": "Füge noch ((anzahlbisnextrabatt)) hinzu und erhalte ((nextrabatt)) Rabatt.",
+        "info": "Variablen: ((anzahlbisnextrabatt)) ; ((nextrabatt))"
+      }
+      ]
+    }
+  ]
+}
+{% endschema %}

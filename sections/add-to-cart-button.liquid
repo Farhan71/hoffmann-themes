@@ -1,0 +1,83 @@
+{% assign variant = all_products[section.settings.product-to-sell].selected_or_first_available_variant %}
+{%capture atc_title %}
+{% if section.settings.atc-title != blank %}
+{{section.settings.atc-title }}
+{%else%}
+{{all_products[section.settings.product-to-sell].title}}
+{%endif%}
+{%endcapture%}
+
+<div class="atc-on-pages">
+  {% if section.settings.enable-atc-title %}
+  <div style ="text-align:center; "class="atc-on-pages-title"> {{atc_title}} </div>
+  {%endif%}
+<button  style="width: 50%; margin: 10px auto;" data-action="open-drawer" data-drawer-id="sidebar-cart" onclick="addupsell({{variant.id}})" type="submit" class="ProductForm__AddToCart Button {% if variant.available %}Button--primary{% else %}Button--secondary{% endif %} Button--full" {% if variant.available %}data-action="add-to-cart"{% else %}disabled="disabled"{% endif %}>
+    {%- if variant.available -%}
+      <span>{% if all_products[section.settings.product-to-sell].template_suffix == 'pre-order' %}{{ 'product.form.pre_order' | t }}{% else %}{{ 'product.form.add_to_cart' | t }}{% endif %}</span>
+
+        <span class="Button__SeparatorDot"></span>
+        <span data-money-convertible>{{ variant.price | money_without_trailing_zeros }}</span>
+      
+    {%- else -%}
+      {{- 'product.form.sold_out' | t -}}
+    {%- endif -%}
+  </button>
+</div>
+
+<script>
+      function addupsell(upsellid){
+        
+      jQuery.post('/cart/add.js', {
+  items: [
+    {
+      quantity: 1,
+      id: upsellid
+    }
+  ]         
+}).done(function() {
+    document.documentElement.dispatchEvent(new CustomEvent('cart:refresh', {
+    bubbles: true
+  }));
+  });
+      
+      }
+       
+</script>
+
+{% schema %}
+  {
+    "name": "Add To Cart Button",
+    "settings": [
+{
+   "type": "product",
+   "id": "product-to-sell",
+   "label": "Produkt"
+},
+{
+   "type": "checkbox",
+   "id": "enable-atc-title",
+   "default": true,
+   "label": "Enable Title for ATC Button"
+},
+{
+      "type": "richtext",
+      "id": "atc-title",
+      "label": "Titel",
+	  "info": "If nothing is set, Product Title will be displayed. HTML Tags are allowed."
+}
+],
+  "presets": [
+    {
+      "category": "HASH-COM",
+      "name": "Add To Cart Button",
+      "settings": {}
+    }
+  ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

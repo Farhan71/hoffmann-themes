@@ -1,0 +1,289 @@
+{%- capture trennlinie -%}
+{% if section.settings.separator_type != "none" %}
+{% render 'separators', type: section.settings.separator_type %}
+{%endif%}
+{%- endcapture -%}
+
+<div class="bulletpoint-section-wrapper Container">
+  
+      <div class="bulletpoints-title-wrapper seo_title">
+        {% if section.settings.heading != blank %} <h2 class="SectionHeader__Heading Heading u-h1 bulletpoints_heading seo_title">{{section.settings.heading}}</h2>{{trennlinie}} {% endif %}
+        {% if section.settings.subheading != blank %} <p class="SectionHeader__SubHeading Heading u-h6 bulletpoints_subheading seo_title">{{section.settings.subheading}}</p>{% endif %}
+      </div>
+  
+      <div class="bulletpoints-wrapper-whole">
+        {% for block in section.blocks %}
+        
+          <div class = "bulletpoint-inside-wrapper">
+            <div class="bulletpoint-icon-wrapper">
+              <i class="fa fa-{{block.settings.bulletpoint-icon}} bulletpoint-icon"></i>
+            </div>
+            <div class= "bulletpoint-text-wrapper seo_text">
+              <span>{{block.settings.bulletpoint-text}}</span>
+            </div>
+          </div>
+
+        {% endfor %}
+        
+        
+        <div class="bulletpoints-subtitle-wrapper seo_text">
+        {% if section.settings.below-bulletpoints-text1 != blank %} <p>{{section.settings.below-bulletpoints-text1}}</p>{% endif %}
+        {% if section.settings.below-bulletpoints-text2 != blank %} <p>{{section.settings.below-bulletpoints-text2}}</p>{% endif %}
+      </div>
+      </div>
+	
+      
+</div>
+<style>
+       /*------------------------ ANFANG  GLOBAL  ----------------------------------------------
+      	----------------------------------------------------------------------------------------------*/  
+  .bulletpoints-wrapper-whole{
+    display: flex;
+    margin-top: 20px;
+    justify-content: space-between;
+  }
+  
+  
+    .bulletpoints-subtitle-wrapper{
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .bulletpoint-section-wrapper{
+      margin-top: {{section.settings.margin_top_section |append:"px"}};
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 1200px;
+    }
+
+    .bulletpoints_heading{
+      color: {{section.settings.heading-color}};
+      text-align: center;
+    }
+
+    .bulletpoints_subheading{
+      color: {{section.settings.subheading-color}};
+      text-align: center;
+    }
+
+    .bulletpoint-icon{
+      color: {{section.settings.bulletpoint-icon-color}};
+    }	
+
+    .bulletpoint-icon-wrapper{
+      justify-content: flex-start;
+      align-self: flex-start;
+      width: 1rem;
+    }
+
+    .bulletpoint-text-wrapper{
+      width: 95%;
+      text-align: justify;
+    }
+  
+         /*------------------------ ENDE  GLOBAL  ----------------------------------------------
+      	----------------------------------------------------------------------------------------------*/ 
+  
+ 
+  
+         /*------------------------ ANFANG  Tablet-And-Up-Modus  ----------------------------------------------
+      	----------------------------------------------------------------------------------------------*/        
+        @media screen and (min-width: 641px) {
+          .bulletpoints-wrapper-whole{
+            flex-direction: row;
+            row-gap: 20px;
+            flex-wrap: wrap;
+          }
+          
+          .bulletpoint-inside-wrapper{
+            display: flex;
+            flex-basis: 47%;
+            max-width: 47%;
+            align-items: flex-start;
+            justify-content: center;
+            word-break: break-word;
+            column-gap: 5px;
+          }
+          
+          .bulletpoints-subtitle-wrapper{
+            text-align: center;
+          }
+          
+          .bulletpoints-title-wrapper{
+            text-align: center;
+          }
+          
+          
+        }
+
+
+          
+         /*------------------------ ENDE  Tablet-And-Up-Modus  ----------------------------------------------
+      	----------------------------------------------------------------------------------------------*/       
+      
+    
+      
+
+  		 /*------------------------ANFANG  Smartphone-Modus  ----------------------------------------------
+          ----------------------------------------------------------------------------------------------*/      
+
+          @media screen and (max-width: 640px) {
+            
+          .bulletpoints-wrapper-whole{
+            flex-direction: column;
+            row-gap: 20px;
+            flex-wrap: wrap;
+          }
+            
+          
+  
+            .bulletpoint-inside-wrapper{
+            display: flex;
+            flex-basis: 100%;
+            max-width: 100%;
+            align-items: flex-start;
+            justify-content: center;
+            word-break: break-word;
+            column-gap: 5px;
+          }
+            
+            .bulletpoints-subtitle-wrapper{
+              text-align: center;
+            }
+            
+            .bulletpoints-title-wrapper{
+              text-align: center;
+            }
+		  }
+
+         /*------------------------ ENDE  Smartphone-Modus  ----------------------------------------------
+        ----------------------------------------------------------------------------------------------*/  
+  
+  
+    
+</style>
+
+{% schema %}
+  {
+    "name": "Bulletpoints with Heading",
+    "settings": [
+      {
+  "type": "select",
+  "id": "separator_type",
+  "label": "Art der Trennline",
+  "options": [
+    {
+    "value": "dots",
+    "label": "Dots"
+    },
+    {
+    "value": "line",
+    "label": "Linie"
+    },
+    {
+    "value": "none",
+    "label": "Keine"
+    }
+  ],
+  "default": "line",
+  "info": "Einstellungen für die Trennlinien unter Theme-Einstellungen --> HASH-COM Trennlinien möglich."
+  },
+	{
+      "type": "header",
+      "content": "Überschrift"
+    },
+    {
+	"type":      "text",
+    "id":        "heading",
+    "label":     "Überschriftstext",
+    "default":   "Überschrift"
+    },
+	{
+      "type": "color",
+      "id": "heading-color",
+      "label": "Textfarbe",
+      "default": "#000000"
+    },
+	{
+      "type": "header",
+      "content": "Unterüberschrift"
+    },
+    {
+	"type":      "text",
+    "id":        "subheading",
+    "label":     "Unterüberschriftstext",
+    "default":   "Unterüberschrift"
+    },
+	{
+      "type": "color",
+      "id": "subheading-color",
+      "label": "Textfarbe",
+      "default": "#000000"
+    },
+    {
+    "type": "number",
+    "id": "margin_top_section",
+    "label": "Margin Top in Pixel",
+    "default": 20
+    },
+  	{
+      "type": "header",
+      "content": "Text unter Bulletpoints"
+    },
+    {
+    "type":"textarea",
+    "id":"below-bulletpoints-text1",
+    "label":"Text 1",
+  	"default":   "Text unter Bulletpoints 1"
+    },
+    {
+    "type":"textarea",
+    "id":"below-bulletpoints-text2",
+    "label":"Text 2",
+  	"default":   "Text unter Bulletpoints 2"
+    },
+   	{
+      "type": "header",
+      "content": "Bulletpoint Icon Farbe"
+    },
+  	{
+      "type": "color",
+      "id": "bulletpoint-icon-color",
+      "label": "Bulletpoint Icon Farbe",
+      "default": "#000000"
+    }
+
+],
+     "blocks":[
+        {
+           "type":"bulletpoint",
+           "name":"Bulletpoint",
+           "settings":[
+              {
+                 "type":"text",
+                 "id":"bulletpoint-icon",
+                 "label":"Bulletpoint Icon"
+              },
+              {
+                 "type":"textarea",
+                 "id":"bulletpoint-text",
+                 "label":"Bulletpoint Text"
+              }
+           ]
+        }
+     ],
+  "presets": [
+    {
+      "category": "Text",
+      "name": "Bulletpoints with Heading",
+      "settings": {}
+    }
+  ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

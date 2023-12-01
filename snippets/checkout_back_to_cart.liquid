@@ -1,0 +1,21 @@
+<script>
+  (function($) {
+  $(document).on("page:load page:change", function() {
+    var breadcrumb_element = document.querySelector("li.breadcrumb__item [href$='/cart'");
+    setCartLink(breadcrumb_element);
+    if (Shopify.Checkout.step === "contact_information") {
+      var back_button = document.querySelector(".step__footer__previous-link");
+      setCartLink(back_button);
+    }
+  });
+})(Checkout.$);
+
+  function setCartLink(elem){
+    var back_to_cart_link = localStorage.getItem("page_before_checkout");
+    if(back_to_cart_link){
+        elem.href = back_to_cart_link;
+      }else{
+        elem.href = "/?opendrawer=true";
+      }
+  }
+  </script>

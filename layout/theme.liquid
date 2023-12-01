@@ -1,0 +1,463 @@
+<!doctype html>
+
+
+<html class="no-js" lang="{{ request.locale.iso_code }}">
+  <head>
+<style>
+  @font-face { font-family: 'FontAwesome'; font-display: swap; }
+</style>
+<!-- Google Tag Manager -->
+<script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'}); var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5ZRSCT9');
+</script>
+<!-- End Google Tag Manager -->
+
+    <script async src="https://scripting.tracify.ai/tracifyv2.js?csid=c16ef66e-f6c1-4f50-9005-43440aec9d0f"></script>
+    <meta charset="utf-8"> 
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="theme-color" content="{{ settings.accent_color }}">
+	<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="53bfe6a5-7502-4669-ad1b-e6d582138950" type="text/javascript" async></script>
+
+    <script>
+var head = document.head;
+var script = document.createElement('script');
+script.type = 'text/javascript';
+script.src = "https://t.hoffmann-germany.de/v1/lst/universal-script?ph=50403f6770eac10d6becceebbd6690fe02570e9b9051bfbd27026e07e893ef11&tag=!clicked&origin=SHOPIFY&ref_url=" + encodeURI(document.URL) ;
+head.appendChild(script);
+</script>
+
+
+    <!-- Hotjar Tracking Code for https://hoffmann-germany.de/ -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:1255245,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+
+</script>
+
+    <title>
+      {{ page_title }}{% if current_tags %}{% assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
+    </title>
+    
+
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    {%- if settings.favicon -%}
+      <link rel="shortcut icon" href="{{ settings.favicon | img_url: '96x' }}" type="image/png">
+    {%- endif -%}
+
+    {% render 'social-meta-tags' %}
+    {% render 'css-variables' %}
+
+    {{ content_for_header }}
+
+    <link rel="stylesheet" href="{{ 'fonts-sofia.css' | asset_url }}">
+    <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}">
+    <link rel="stylesheet" href="{{'hashcom-gmbh.css' | asset_url }}">
+
+
+    
+
+    <script>
+      {%- if request.page_type == 'policy' -%}
+        document.addEventListener('DOMContentLoaded', function() {
+          document.querySelector('.shopify-policy__title').classList.add('PageHeader', 'Heading', 'u-h1');
+          document.querySelector('.shopify-policy__body').classList.add('Rte');
+        });
+      {%- endif -%}
+      
+    
+
+      // This allows to expose several variables to the global scope, to be used in scripts
+      window.theme = {
+        pageType: {{ request.page_type | json }},
+        moneyFormat: {{ shop.money_format | json }},
+        moneyWithCurrencyFormat: {{ shop.money_with_currency_format | json }},
+        productImageSize: {{ settings.product_image_size | json }},
+        searchMode: {{ settings.search_mode | json }},
+        showPageTransition: {{ settings.show_page_transition | json }},
+        showElementStaggering: {{ settings.show_element_staggering | json }},
+        showImageZooming: {{ settings.show_image_zooming | json }}
+      };
+
+      window.routes = {
+        rootUrl: {{ routes.root_url | json }},
+        rootUrlWithoutSlash: {% if routes.root_url == '/' %}''{% else %}{{ routes.root_url | json }}{% endif %},
+        cartUrl: {{ routes.cart_url | json }},
+        cartAddUrl: {{ routes.cart_add_url | json }},
+        cartChangeUrl: {{ routes.cart_change_url | json }},
+        searchUrl: {{ routes.search_url | json }},
+        productRecommendationsUrl: {{ routes.product_recommendations_url | json }}
+      };
+
+      window.languages = {
+        cartAddNote: {{ 'cart.general.add_note' | t | json }},
+        cartEditNote: {{ 'cart.general.edit_note' | t | json }},
+        productImageLoadingError: {{ 'product.slideshow.image_loading_error' | t | json }},
+        productFormAddToCart: {% if product.template_suffix == 'pre-order' %}{{ 'product.form.pre_order' | t | json }}{% else %}{{ 'product.form.add_to_cart' | t | json }}{% endif %},
+        productFormUnavailable: {{ 'product.form.unavailable' | t | json }},
+        productFormSoldOut: {{ 'product.form.sold_out' | t | json }},
+        shippingEstimatorOneResult: {{ 'cart.shipping_estimator.one_result_title' | t | json }},
+        shippingEstimatorMoreResults: {{ 'cart.shipping_estimator.more_results_title' | t | json }},
+        shippingEstimatorNoResults: {{ 'cart.shipping_estimator.no_results_title' | t | json }},
+        productFormAddToCartPreorder: {{settings.preorder_atc_text | json }}
+      };
+
+      window.lazySizesConfig = {
+        loadHidden: false,
+        hFac: 0.5,
+        expFactor: 2,
+        ricTimeout: 150,
+        lazyClass: 'Image--lazyLoad',
+        loadingClass: 'Image--lazyLoading',
+        loadedClass: 'Image--lazyLoaded'
+      };
+      
+
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+      document.documentElement.style.setProperty('--window-height', window.innerHeight + 'px');
+
+      // We do a quick detection of some features (we could use Modernizr but for so little...)
+      (function() {
+        document.documentElement.className += ((window.CSS && window.CSS.supports('(position: sticky) or (position: -webkit-sticky)')) ? ' supports-sticky' : ' no-supports-sticky');
+        document.documentElement.className += (window.matchMedia('(-moz-touch-enabled: 1), (hover: none)')).matches ? ' no-supports-hover' : ' supports-hover';
+      }());
+    </script>
+
+    <script src="{{ 'lazysizes.min.js' | asset_url }}" async></script>
+
+    {%- if template == 'customers/addresses' -%}
+      <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer></script>
+      <script src="{{ 'customer_area.js' | shopify_asset_url }}" defer></script>
+    {%- endif -%}
+
+    <script src="https://cdn.polyfill.io/v3/polyfill.min.js?unknown=polyfill&features=fetch,Element.prototype.closest,Element.prototype.remove,Element.prototype.classList,Array.prototype.includes,Array.prototype.fill,Object.assign,CustomEvent,IntersectionObserver,IntersectionObserverEntry,URL" defer></script>
+    <script src="{{ 'libs.min.js' | asset_url }}" defer></script>
+    <script src="{{ 'theme.min.js' | asset_url }}" defer></script>
+    <script src="{{ 'custom.js' | asset_url }}" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script>
+      (function () {
+        window.onpageshow = function() {
+          if (window.theme.showPageTransition) {
+            var pageTransition = document.querySelector('.PageTransition');
+
+            if (pageTransition) {
+              pageTransition.style.visibility = 'visible';
+              pageTransition.style.opacity = '0';
+            }
+          }
+
+          // When the page is loaded from the cache, we have to reload the cart content
+          document.documentElement.dispatchEvent(new CustomEvent('cart:refresh', {
+            bubbles: true
+          }));
+        };
+      })();
+    </script>
+
+    {% render 'microdata-schema' %}
+
+   {{ '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' | stylesheet_tag }}
+    <!-- <link rel="preload" as="style" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css?&display=swap" type="text/css" media="all"> -->
+    <!-- Begin eTrusted bootstrap tag -->
+<script src="https://integrations.etrusted.com/applications/widget.js/v2" defer async></script>
+<!-- End eTrusted bootstrap tag -->
+
+  <script src="https://cdn.ablyft.com/s/60091050.js"></script>
+    
+  </head>
+
+  {%- capture classes -%}features--heading-{{ settings.heading_size }}{%- endcapture -%}
+
+  {%- if settings.uppercase_heading -%}
+    {%- assign classes = classes | append: ' features--heading-uppercase' -%}
+  {%- endif -%}
+
+  {%- if settings.product_show_price_on_hover -%}
+    {%- assign classes = classes | append: ' features--show-price-on-hover' -%}
+  {%- endif -%}
+
+  {%- if settings.show_page_transition -%}
+    {%- assign classes = classes | append: ' features--show-page-transition' -%}
+  {%- endif -%}
+
+  {%- if settings.show_button_transition -%}
+    {%- assign classes = classes | append: ' features--show-button-transition' -%}
+  {%- endif -%}
+
+  {%- if settings.show_image_zooming -%}
+    {%- assign classes = classes | append: ' features--show-image-zooming' -%}
+  {%- endif -%}
+
+  {%- if settings.show_element_staggering -%}
+    {%- assign classes = classes | append: ' features--show-element-staggering' -%}
+  {%- endif -%}
+
+  <body class="prestige--v4 {{ classes }} {% if template.directory %}template-{{ template.directory | handle }}{% endif %} template-{{ template.name | handle }}">
+
+    <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5ZRSCT9" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+    
+    <a class="PageSkipLink u-visually-hidden" href="#main">{{ 'header.navigation.skip_to_content' | t }}</a>
+    <span class="LoadingBar"></span>
+    <div class="PageOverlay"></div>
+
+    {%- if settings.show_page_transition -%}
+      <div class="PageTransition"></div>
+    {%- endif -%}
+
+
+    {% section 'popup' %}
+    {% section 'sidebar-menu' %}
+
+    {%- if template != 'cart' -%}
+    {%- comment -%}{% render 'cart-drawer' %}{%- endcomment -%}
+    {% section 'mini-cart' %}
+    {%- endif -%}
+
+    <div class="PageContainer">
+      {% section 'vorteilskommunikation' %}
+      {%-if template.name == "product" -%}
+      {% section "add-to-cart-bar" %}
+      {%-endif-%}
+      {% section 'announcement' %}
+      {% section 'header' %}
+
+      <main id="main" role="main">
+        {{ content_for_layout }}
+      </main>
+
+      {% section 'footer' %}
+    </div>
+    
+       <!-- AWIN Tracking -->
+    <script src="https://www.dwin1.com/31493.js" type="text/javascript" defer="defer"></script>
+    <!-- AWIN Tracking -->
+
+    <!-- Start of HubSpot Embed Code -->
+<script type="text/javascript" id="hs-script-loader" async defer src="//js-eu1.hs-scripts.com/25499559.js"></script>
+<!-- End of HubSpot Embed Code -->
+
+<!-- Adtribute.io Start -->
+<script>
+  var adbq = window.adbq || [];
+  var adbs = window.adbs || {};
+
+  adbs.accountId = 'lDdVWp';
+  adbs.domain = 'hoffmann-germany.de';
+
+  adbs.currentPage = new URL( window.location.href );
+  adbs.env = adbs.currentPage.searchParams.get( 'adb_debug' ) === 'true' ? 'dev' : 'prod';
+  adbs.version = adbs.currentPage.searchParams.get( 'adb_version' );
+  adbs.hasSessionStorageAccess = () => {
+    const test = 'sessionStorageWriteable';
+    try {
+      sessionStorage.setItem( 'test', test );
+      sessionStorage.removeItem( 'test' );
+
+      return true;
+    } catch ( e ) {
+      return false;
+    }
+  };
+  adbs.hasLocalStorageAccess = () => {
+    const test = 'localStorageWriteable';
+    try {
+      localStorage.setItem( 'test', test );
+      localStorage.removeItem( 'test' );
+
+      return true;
+    } catch ( e ) {
+      return false;
+    }
+  };
+  adbs.encodeInput = ( input ) => btoa( encodeURIComponent( JSON.stringify( input ) ) );
+  adbs.decodeInput = ( input ) => JSON.parse( decodeURIComponent( atob(  input ) ) );
+  adbs.isValidUrl = ( url ) => {
+    try {
+      new URL( url );
+
+      return true;
+    } catch ( e ) {
+      return false;
+    }
+
+  };
+  adbs.retry = 200;
+  adbs.load = ( a, d, e, v ) => {
+    const el = document.createElement( 'script' );
+    el.type = 'text/javascript';
+    el.async = true;
+    el.onerror = () => {
+      setTimeout( () => {
+
+        adbs.load( adbs.accountId, adbs.domain, adbs.env, adbs.version );
+
+        adbs.retry = adbs.retry * 1.5;
+
+      }, adbs.retry);
+
+    };
+    el.src = 'https://bundle.' + d + '/client?env=' + e + '&account_id=' + a + ( v ? '&version=' + v : '' );
+    const s = document.getElementsByTagName( 'script' )[0];
+    s.parentNode.insertBefore( el, s );
+
+  }
+  
+  {% if customer %}
+
+    adbq.push({
+      method: 'set',
+      user_attributes: {
+        $_shopify_customer_id: '{{customer.id}}',
+        $_email: '{{customer.email}}'
+      }
+    });
+
+  {% endif %}
+  
+  {% if checkout %}
+  
+    adbq.push({
+      method: 'set',
+      user_attributes: {
+        $_shopify_checkout_id: '{{checkout.id}}',
+        $_email: {% if checkout.email %}'{{checkout.email}}'{% else %}undefined{% endif %}
+      }
+    });
+   
+  {% endif %}
+  
+  {% if cart %}
+
+    if ( {{cart.item_count}} > 0 ) {
+      function trackShopifyCartId ( cartId ) {
+        if ( cartId ) {
+          adbq.push({
+            method: 'track',
+            event_name: 'Identify',
+            event_type: 'standard',
+            user_attributes: {
+              $_shopify_cart_id: cartId
+            }
+          });
+        }
+      };
+
+      function setShopifyCartId ( cartId ) {
+        if ( cartId ) {
+          adbq.push({
+            method: 'set',
+            user_attributes: {
+              $_shopify_cart_id: cartId
+            }
+          });
+        }
+      };
+
+      function fetchShopifyCartId () {
+        fetch( '/cart.json' ).then( response => response.json() ).then( json => {
+          setShopifyCartId( json.token );
+          trackShopifyCartId( json.token );
+
+          if ( adbs.hasSessionStorageAccess() && json.token ) {
+            sessionStorage.setItem( 'adb_shopify_cart_id', json.token );
+
+          }
+
+        });
+
+      };
+
+      if ( adbs.hasSessionStorageAccess() ) {
+        if ( sessionStorage.getItem( 'adb_shopify_cart_id' ) ) {
+          setShopifyCartId( sessionStorage.getItem( 'adb_shopify_cart_id') );
+
+        } else {
+          fetchShopifyCartId();
+
+        }  
+      } else {
+        fetchShopifyCartId();
+
+      }
+    }
+
+  {% endif %}
+  
+  {% if product %}
+
+   adbq.push({
+     method: 'track',
+     event_name: 'Viewed a product',
+     event_type: 'ecommerce',
+     ecommerce_attributes: [{
+       product_id: '{{product.id}}',
+       product_name: '{{product.title}}'
+     }]
+   });
+
+  {% endif %}
+  
+  adbq.push( {
+    method: 'track',
+    event_name: 'Viewed a page',
+    event_type: 'standard',
+    event_timestamp: new Date().getTime(),
+    page_url: adbs.currentPage.href,
+    referrer_url: document.referrer,
+    page_title: document.title
+  } );
+
+  if ( adbs.hasLocalStorageAccess() ) {
+    if ( localStorage.getItem( 'adbq' ) ) {
+      const storedQueue = JSON.parse( localStorage.getItem( 'adbq' ) );
+      storedQueue.map( event => adbq.push( event ) );
+    }
+
+    localStorage.setItem( 'adbq', JSON.stringify( adbq ) );
+
+  } else {
+    const storedQueue = adbs.currentPage.searchParams.get( 'adbq' );
+    if ( storedQueue ) {
+      adbs.decodeInput( storedQueue ).map( event => adbq.push( event ) );
+      adbs.currentPage.searchParams.delete( 'adbq' );
+      window.history.replaceState({}, document.title, adbs.currentPage.href );
+
+    }
+
+    document.querySelectorAll('a').forEach( link => {
+      let currentLink = link.getAttribute('href')
+      if ( adbs.isValidUrl( currentLink ) ) {
+        currentLink = new URL( link.getAttribute('href') );
+        currentLink.searchParams.set( 'adbq', adbs.encodeInput( adbq ) );
+        link.setAttribute( 'href', currentLink.href );
+      }
+    });
+
+  }
+
+  adbs.load( adbs.accountId, adbs.domain, adbs.env, adbs.version );
+</script>
+<!-- Adtribute.io End -->
+    
+{% render 'cart_view_dataLayer' %}
+{% render 'klaviyo_atc_flow' %}
+    
+  </body>
+</html>

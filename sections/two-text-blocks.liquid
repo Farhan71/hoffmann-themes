@@ -1,0 +1,168 @@
+{% assign count_blank_blocks = 0 %}
+
+{%- if section.settings.content_1 == blank -%}
+{%- assign count_blank_blocks = count_blank_blocks | plus: 1 -%}
+{%- endif -%}
+
+{%- if section.settings.content_2 == blank -%}
+{%- assign count_blank_blocks = count_blank_blocks | plus: 1 -%}
+{%- endif -%}
+
+{%capture content1%}
+{{section.settings.content_1}}
+{%endcapture%}
+
+{%capture content2%}
+{{section.settings.content_2}}
+{%endcapture%}
+
+<html>
+
+<div class="two_richtext_blocks_row{{section.id|md5}}">
+  {%- if section.settings.content_1 != blank -%}
+  <div class="richtext_block_column{{section.id|md5}}">
+    {{section.settings.heading_content1}}
+    {{content1}}
+    
+  </div>
+  {%- endif -%}
+  {%- if section.settings.content_2 != blank -%}
+  	<div class="richtext_block_column{{section.id|md5}}">
+    {{section.settings.heading_content2}}
+    {{content2}}
+  	</div>
+  {%- endif -%}
+</div>
+  <style>
+    
+          /* ANFANG  Desktop-Modus / Landscape  */      
+      @media screen and (min-width: 1007px) {
+
+      .two_richtext_blocks_row{{section.id|md5}} {
+        display: flex;
+        flex-direction: row;
+        margin: {{section.settings.margin_tb_richtext_row_desktop}}px {{section.settings.margin_lr_richtext_row_desktop}}px;
+      }
+
+       .richtext_block_column{{section.id|md5}} {
+        flex: {%- if count_blank_blocks < 2 -%}100%{%-else-%}50%{%- endif -%};
+        padding: {{section.settings.padding_richtext_column}}px;
+      }
+      
+      }
+         /*------------------------ ENDE  Desktop-Modus / Landscape  ----------------------------------------------
+      ------------------------------------------------------------------------------
+      ----------------------------------------------------------------------------------------------*/       
+      
+    
+      
+
+    /*------------------------BEGIN  Portrait-Modus / Handy  ----------------------------------------------
+          ------------------------------------------------------------------------------
+          ----------------------------------------------------------------------------------------------*/      
+
+          @media screen and (max-width: 1007px){
+          .two_richtext_blocks_row{{section.id|md5}}{
+              display: flex;
+              flex-direction: column;
+              margin: {{section.settings.margin_tb_richtext_row_mobile}}px {{section.settings.margin_lr_richtext_row_mobile}}px;
+              }
+
+            .richtext_block_column{{section.id|md5}}{
+              flex: 100%;
+              padding: {{section.settings.padding_richtext_column}}px;
+            }
+
+          }
+
+
+       /*------------------------ ENDE  Portrait-Modus / Handy  ----------------------------------------------
+          ------------------------------------------------------------------------------
+      ----------------------------------------------------------------------------------------------*/  
+    
+
+
+  </style>
+  
+{% schema %}
+{
+  "name": "Two Richtext Blocks",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "heading_content1",
+      "label": "Heading of Content 1",
+      "default": "<p>Heading of Content 1</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "content_1",
+      "label": "Content 1",
+      "default": "<p>Add your own custom content to give more information about your store.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "heading_content2",
+      "label": "Heading of Content 2",
+      "default": "<p>Heading of Content 1</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "content_2",
+      "label": "Content 2",
+      "default": "<p>Add your own custom content to give more information about your store.</p>"
+    },
+  	{
+      "type": "number",
+      "id": "padding_richtext_column",
+      "label": "Abstand der Spalten (Innen) in Pixel (GLOBAL)",
+      "default": 10
+	},
+	{
+      "type": "number",
+      "id": "margin_lr_richtext_row_mobile",
+      "label": "Abstand (Außen) Links Rechts in Pixel (Mobile)",
+      "default": 10
+	},
+    {
+      "type": "number",
+      "id": "margin_tb_richtext_row_mobile",
+      "label": "Abstand (Außen) Oben Unten in Pixel (Mobile)",
+      "default": 10
+	},
+  	{
+      "type": "number",
+      "id": "margin_lr_richtext_row_desktop",
+      "label": "Abstand (Außen) Links Rechts in Pixel (Desktop)",
+      "default": 80
+	},
+  	{
+      "type": "number",
+      "id": "margin_tb_richtext_row_desktop",
+      "label": "Abstand (Außen) Oben Unten in Pixel (Desktop)",
+      "default": 20
+	},
+    {
+      "type": "header",
+      "content": "WICHTIGE INFO"
+    },
+	{
+      "type": "paragraph",
+  	  "content": "SYNTAX: {{product.metafields.NAMESPACE.KEY.value}}. Alle Großgeschriebenen Werte müssen ersetzt werden. \n Für das jeweilige metafield muss eine Gruppierung erstellt werden."
+    }
+  ],
+  "presets": [
+    {
+      "category": "Text",
+      "name": "Two Richtext Blocks",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

@@ -1,0 +1,169 @@
+{%- capture trennlinie -%}
+{% if section.settings.separator_type != "none" %}
+{% render 'separators', type: section.settings.separator_type %}
+{%endif%}
+{%- endcapture -%}
+
+
+<html>
+
+<div class="two_richtext_blocks_row{{section.id|md5}}">
+  {% for block in section.blocks %}
+  {% case block.type %}
+  {% when "textblock" %}
+  {%- if block.settings.content != blank or block.settings.heading != blank -%}
+  <div class="richtext_block_column{{section.id|md5}}">
+    <h2 class="seo_title">{{block.settings.heading}}</h2>
+    {{trennlinie}} 
+    <div class="seo_text">
+      <p>{{block.settings.content}}</p>
+    </div>
+    
+  </div>
+  {%endif%}
+  {% endcase %}
+  {% endfor %}
+</div>
+<style>
+  /* ANFANG  Desktop-Modus / Landscape  */
+  @media screen and (min-width: 1007px) {
+
+    .two_richtext_blocks_row{{section.id|md5}}{
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      margin: {{section.settings.margin_tb_richtext_row_desktop}}px {{section.settings.margin_lr_richtext_row_desktop}}px;
+    }
+
+    .richtext_block_column{{section.id|md5}}{
+      flex: 100%;
+      padding: {{section.settings.padding_richtext_column}}px;
+    }
+
+  }
+
+  /*------------------------ ENDE  Desktop-Modus / Landscape  ----------------------------------------------
+      ------------------------------------------------------------------------------
+      ----------------------------------------------------------------------------------------------*/
+
+
+
+
+  /*------------------------BEGIN  Portrait-Modus / Handy  ----------------------------------------------
+          ------------------------------------------------------------------------------
+          ----------------------------------------------------------------------------------------------*/
+
+  @media screen and (max-width: 1007px) {
+    .two_richtext_blocks_row{{section.id|md5}}{
+      display: flex;
+      flex-direction: column;
+      margin: {{section.settings.margin_tb_richtext_row_mobile}}px {{section.settings.margin_lr_richtext_row_mobile}}px;
+    }
+
+    .richtext_block_column{{section.id|md5}}{
+      flex: 100%;
+      padding: {{section.settings.padding_richtext_column}}px;
+    }
+  }
+
+
+  /*------------------------ ENDE  Portrait-Modus / Handy  ----------------------------------------------
+          ------------------------------------------------------------------------------
+      ----------------------------------------------------------------------------------------------*/
+</style>
+
+{% schema %}
+{
+"name": "SEO Texte mit HTML",
+"settings": [
+  {
+  "type": "select",
+  "id": "separator_type",
+  "label": "Art der Trennline",
+  "options": [
+    {
+    "value": "dots",
+    "label": "Dots"
+    },
+    {
+    "value": "line",
+    "label": "Linie"
+    },
+    {
+    "value": "none",
+    "label": "Keine"
+    }
+  ],
+  "default": "line",
+  "info": "Einstellungen für die Trennlinien unter Theme-Einstellungen --> HASH-COM Trennlinien möglich."
+  },
+{
+"type": "number",
+"id": "padding_richtext_column",
+"label": "Abstand der Spalten (Innen) in Pixel (GLOBAL)",
+"default": 10
+},
+{
+"type": "number",
+"id": "margin_lr_richtext_row_mobile",
+"label": "Abstand (Außen) Links Rechts in Pixel (Mobile)",
+"default": 10
+},
+{
+"type": "number",
+"id": "margin_tb_richtext_row_mobile",
+"label": "Abstand (Außen) Oben Unten in Pixel (Mobile)",
+"default": 10
+},
+{
+"type": "number",
+"id": "margin_lr_richtext_row_desktop",
+"label": "Abstand (Außen) Links Rechts in Pixel (Desktop)",
+"default": 80
+},
+{
+"type": "number",
+"id": "margin_tb_richtext_row_desktop",
+"label": "Abstand (Außen) Oben Unten in Pixel (Desktop)",
+"default": 20
+}
+],
+"blocks": [
+  {
+  "type": "textblock",
+  "name": "Textblock",
+  "settings": [
+    {
+    "type": "textarea",
+    "id": "heading",
+    "label": "Heading",
+    "default": "<p>Heading of Content</p>"
+    },
+    {
+    "type": "textarea",
+    "id": "content",
+    "label": "Content",
+    "default": "<p>Add your own custom content to give more information about your store.</p>"
+    },
+    {
+    "type": "paragraph",
+    "content": "SYNTAX: {{product.metafields.NAMESPACE.KEY.value}}. Alle Großgeschriebenen Werte müssen ersetzt werden. Für das jeweilige metafield muss eine Gruppierung erstellt werden."
+    }
+  ]
+}
+],
+"presets": [
+{
+"category": "Text",
+"name": "Text Blocks (HTML) - NEU",
+"settings": {}
+}
+]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

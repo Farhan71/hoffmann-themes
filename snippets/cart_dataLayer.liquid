@@ -1,0 +1,29 @@
+<script>
+   const productsGA = [];
+      {% for line_item in cart.items %}
+          var product = {
+              item_id: {{ line_item.product.id | json }},
+              item_name: {{ line_item.product.title | json }},
+              {% for discount_application in checkout.discount_applications %}
+                coupon: {{ discount_application.title | json }},
+              {% endfor %}
+              index: {{ forloop.index }},
+              item_category: {{ line_item.product.type | json }},
+              item_brand: {{ line_item.product.vendor | json }},
+              item_variant: {{ line_item.variant.title | json }},
+              price: {{ line_item.original_price | money_without_currency | replace: ",", "."  }},
+              quantity: {{ line_item.quantity | json }},
+              discount: {{ line_item.line_level_total_discount | money_without_currency | replace: ",", "." }}
+          }
+          productsGA.push(product);
+      {% endfor %}
+      dataLayer.push({ ecommerce: null });
+      dataLayer.push({
+      event: "GA4_view_cart",
+      ecommerce: {
+        currency: {{ shop.currency | json }},
+        value: {{ cart.original_total_price | money_without_currency | replace: ",", "." }},
+        items:productsGA
+      }
+    });
+</script>

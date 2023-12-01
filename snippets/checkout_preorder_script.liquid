@@ -1,0 +1,68 @@
+{% assign items_tags = checkout["line_items"]  | map: "product" | map:"tags"  %}
+      {% assign items_tags_merged = "" | split: "," %}
+      {% for tags_array in items_tags %}
+        {% assign items_tags_merged = items_tags_merged | concat: tags_array %} 
+      {% endfor %}
+      {% assign items_tags_merged = items_tags_merged | compact | uniq | downcase %}
+      {% assign downcase_preorder_activation_tag = settings.preorder_activation_tag | downcase %}
+      {% assign checkout_has_preorder = false %}
+      {% if items_tags_merged contains downcase_preorder_activation_tag %}
+        {% assign checkout_has_preorder = true %}
+      {% endif %}
+      {% if checkout_has_preorder == true %}
+
+      {% capture html_list_preorder_items %}
+        <ul style="list-style: inside; padding: 5px 0;" id="preorder-items">    
+          {% for l_item in checkout["line_items"] %}
+            {% assign line_item_tags_downcase = l_item.product.tags | downcase %}
+            {% if line_item_tags_downcase contains downcase_preorder_activation_tag %}
+            <li>{{- l_item.product.title -}}</li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endcapture %}
+
+        <script>
+          (function($) {
+            $(document).on("page:load", function() {
+              if (Shopify.Checkout.step === "payment_method") {
+                let klarna_pay_later = document.querySelector("[data-gateway-name='klarna_pay_later']");
+                if(klarna_pay_later){
+                  klarna_pay_later.style.display = "none";
+                }
+              }
+            {% if settings.preorder_checkout_info != blank %}
+              if(Shopify.Checkout.step === "shipping_method"){
+                let parents_class = ".section--shipping-method";
+              }else if(Shopify.Checkout.step === "payment_method"){
+                let parents_class = ".section--payment-method";
+              }else{
+                let parents_class = null;
+              }
+              
+            if (parents_class != null){
+                let preorder_shipping_text_parent = document.querySelector(parents_class);
+                if(preorder_shipping_text_parent){
+                  let list = document.createElement("div");
+                  list.innerHTML = `
+                    <div style="margin-top: 1.5em;">
+                      {{settings.preorder_checkout_info | replace: "%liste_der_produktnamen%", html_list_preorder_items }}
+                    </div>
+                  `;
+                  preorder_shipping_text_parent.appendChild(list);
+                  
+                }
+              }
+            {% endif %}
+              
+            });
+          })(Checkout.$); 
+        </script>
+
+  <style>
+    .preorder_checkout_info_color{
+      color: {{settings.preorder_checkout_info_color | default: "#000000"}};
+    }
+  </style>
+        
+      {% endif %}

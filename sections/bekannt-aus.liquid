@@ -1,0 +1,81 @@
+{%- if section.settings.title != blank -%}
+<section class="logo-brand-home">
+  {%- if section.settings.title != blank -%}
+  <h2 class="logo-brand-title text-center">{{ section.settings.title | escape }}</h2>
+  {%- endif -%}
+  <div class="logo-brand-loop">
+    {%- for block in section.blocks -%}
+    {%- if block.settings.image != blank -%}
+    <div class="brand_logo_img">
+      <a href="{%- if block.settings.link != blank -%}{{ block.settings.link }}{%- endif -%}" target="_blank">
+        <img width="130px" height="90px" class="newspaper-image" src="{{ block.settings.image | img_url: '400x300' }}" alt="{{ block.settings.image.alt | escape }}" loading="lazy">
+      </a>
+    </div>
+    {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+<style>
+    .logo-brand-home{
+        text-align:center;
+        padding-top:20px;
+    }
+    .logo-brand-loop{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        flex-wrap:wrap;
+    }
+    .brand_logo_img{
+      padding:0 10px;
+      max-width:150px;
+      width:100%;
+    }
+</style>
+
+{% endif %}
+
+{% schema %}
+{
+  "name": "Bekannt aus",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "Custom",
+      "name": "Bekannt aus",
+      "settings": {},
+      "blocks": [
+        {
+          "type": "image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

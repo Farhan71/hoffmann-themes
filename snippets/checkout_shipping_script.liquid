@@ -1,0 +1,220 @@
+<style>
+  .HOF-16 .shippingPrice {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 18px;
+  color: #32312f;
+}
+.HOF-16 .shippingPriceColor {
+  color: #0f951c;
+}
+.HOF-16 .noShippingPriceTell {
+  font-weight: 400 !important;
+}
+</style>
+
+<script>
+  var hof_16 = {
+  countryCheck: function(select, para) {
+    var choice = select.value;
+    var sumValue = parseInt(document.querySelector(".order-summary__emphasis[data-checkout-subtotal-price-target]").getAttribute("data-checkout-subtotal-price-target"));
+    var discountValue = 0;
+    var totalWithShipping;
+    function total(discountValue) {
+      var shipping = discountValue;
+      if(document.querySelector('[data-discount-type="percentage"]')){
+        let disvalue= parseInt(document.querySelector('[data-discount-type="percentage"] [data-checkout-discount-amount-target]').getAttribute('data-checkout-discount-amount-target'));
+        totalWithShipping= (sumValue + shipping) - disvalue;
+      }else{
+            totalWithShipping = sumValue + shipping;
+      }
+      var totalSum=(totalWithShipping / 100).toFixed(2);
+      var totalSumString = totalSum.toLocaleString();
+      var totalValue = totalSumString.replace(".", ",");
+     return[
+        document.querySelector(".payment-due__price[data-checkout-payment-due-target]").textContent=`${totalValue} €`,
+        document.querySelector(".order-summary__emphasis.total-recap__final-price").textContent=`${totalValue} €`
+      ]
+    }
+    if (choice === "Germany") {
+      para.textContent = "Kostenlos";
+      total((discountValue = 0));
+      para.classList.add("shippingPriceColor");
+      if (para.classList.contains("noShippingPriceTell")) {
+        para.classList.remove("noShippingPriceTell");
+      }
+    } else if (choice === "Austria" || choice === "Belgium" || choice === "Luxembourg" || choice === "Netherlands") {
+      if (sumValue >= 15000) {
+        if (!para.classList.contains("shippingPriceColor")) {
+          para.classList.add("shippingPriceColor");
+        }
+        if (para.classList.contains("noShippingPriceTell")) {
+          para.classList.remove("noShippingPriceTell");
+        }
+        para.textContent = "Kostenlos";
+        total((discountValue = 0));
+      } else {
+        if (para.classList.contains("shippingPriceColor")) {
+          para.classList.remove("shippingPriceColor");
+        }
+        if (para.classList.contains("noShippingPriceTell")) {
+          para.classList.remove("noShippingPriceTell");
+        }
+        para.textContent = "4,95€";
+        total((discountValue = 495));
+      }
+    } else if (choice === "Denmark" || choice === "France" || choice === "Monaco") {
+      if (sumValue >= 15000) {
+        if (!para.classList.contains("shippingPriceColor")) {
+          para.classList.add("shippingPriceColor");
+        }
+        if (para.classList.contains("noShippingPriceTell")) {
+          para.classList.remove("noShippingPriceTell");
+        }
+        para.textContent = "Kostenlos";
+        total((discountValue = 0));
+      } else {
+        if (para.classList.contains("shippingPriceColor")) {
+          para.classList.remove("shippingPriceColor");
+        }
+        if (para.classList.contains("noShippingPriceTell")) {
+          para.classList.remove("noShippingPriceTell");
+        }
+        para.textContent = "10,00€";
+        total((discountValue = 1000));
+      }
+    } else if (choice === "Italy" || choice === "Spain" || choice === "Poland" || choice === "United Kingdom" || choice === "Czech Republic" || choice === "Holy See (Vatican City State)") {
+      if (sumValue >= 20000) {
+        if (!para.classList.contains("shippingPriceColor")) {
+          para.classList.add("shippingPriceColor");
+        }
+        if (para.classList.contains("noShippingPriceTell")) {
+          para.classList.remove("noShippingPriceTell");
+        }
+        para.textContent = "Kostenlos";
+        total((discountValue = 0));
+      } else {
+        if (para.classList.contains("shippingPriceColor")) {
+          para.classList.remove("shippingPriceColor");
+        }
+        if (para.classList.contains("noShippingPriceTell")) {
+          para.classList.remove("noShippingPriceTell");
+        }
+        para.textContent = "16,00€";
+        total((discountValue = 1600));
+      }
+    } else if (choice === "Greece" || choice === "Portugal" || choice === "Norway" || choice === "Sweden" || choice === "Switzerland" || choice === "Liechtenstein") {
+      if (sumValue >= 20000) {
+        if (!para.classList.contains("shippingPriceColor")) {
+          para.classList.add("shippingPriceColor");
+        }
+        if (para.classList.contains("noShippingPriceTell")) {
+          para.classList.remove("noShippingPriceTell");
+        }
+        para.textContent = "Kostenlos";
+        total((discountValue = 0));
+      } else {
+        if (para.classList.contains("shippingPriceColor")) {
+          para.classList.remove("shippingPriceColor");
+        }
+        if (para.classList.contains("noShippingPriceTell")) {
+          para.classList.remove("noShippingPriceTell");
+        }
+        para.textContent = "21,00€";
+        total((discountValue = 2100));
+      }
+    } else if (choice === "United States" || choice === "Mexico" || choice === "Canada") {
+      if (sumValue >= 20000) {
+        if (!para.classList.contains("shippingPriceColor")) {
+          para.classList.add("shippingPriceColor");
+        }
+        if (para.classList.contains("noShippingPriceTell")) {
+          para.classList.remove("noShippingPriceTell");
+        }
+        para.textContent = "Kostenlos";
+        total((discountValue = 0));
+      } else {
+        if (para.classList.contains("shippingPriceColor")) {
+          para.classList.remove("shippingPriceColor");
+        }
+        if (para.classList.contains("noShippingPriceTell")) {
+          para.classList.remove("noShippingPriceTell");
+        }
+        para.textContent = "35,00€";
+        total((discountValue = 3500));
+      }
+    } else {
+      if (para.classList.contains("shippingPriceColor")) {
+        para.classList.remove("shippingPriceColor");
+      }
+      para.textContent = "Wird im Schritt Versand berechnet";
+      if ((para.textContent = "Wird im Schritt Versand berechnet")) {
+        para.classList.add("noShippingPriceTell");
+      }
+      total((discountValue = 0));
+    }
+  },
+  mainJS: function() {
+    if (document.querySelector('[data-section="customer-information"] .logged-in-customer-information')) {
+      var select = document.querySelector("#checkout_shipping_address_country");
+      var para = document.querySelector(".total-line__price .order-summary__small-text");
+      para.classList.add("shippingPrice");
+
+      hof_16.countryCheck(select, para);
+      select.addEventListener("change", () => {
+        hof_16.countryCheck(select, para);
+      });
+      if (document.querySelector("#checkout_shipping_address_id")) {
+        document.querySelector("#checkout_shipping_address_id").addEventListener("change", () => {
+          var target = document.querySelector("#checkout_shipping_address_country").parentElement;
+
+          var observer = new MutationObserver(function() {
+            hof_16.countryCheck(select, para);
+          });
+          observer.observe(target, {childList: true, subtree: true});
+        });
+      }
+    } else {
+      var select = document.querySelector("#checkout_shipping_address_country");
+      var para = document.querySelector(".total-line__price .order-summary__small-text");
+      para.classList.add("shippingPrice");
+
+      hof_16.countryCheck(select, para);
+      select.addEventListener("change", () => {
+        hof_16.countryCheck(select, para);
+      });
+      var target = document.querySelector("#checkout_shipping_address_country").parentElement;
+
+          var observer = new MutationObserver(function() {
+            hof_16.countryCheck(select, para);
+          });
+          observer.observe(target, {childList: true, subtree: true});
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      hof_16.mainJS();
+    });
+  },
+  mutation: () => {
+    var target = document.querySelector(".product-table");
+
+    var observer = new MutationObserver(function() {
+      hof_16.mainJS();
+    });
+    observer.observe(target, {childList: true, subtree: true});
+  },
+};
+(function pollForhof_16() {
+  if (document.querySelector("#checkout_shipping_address_country") && document.querySelector(".total-line__price .order-summary__small-text")) {
+    try {
+      hof_16.mainJS();
+      hof_16.mutation();
+      document.body.classList.add("HOF-16");
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    setTimeout(pollForhof_16, 25);
+  }
+})();
+</script>

@@ -1,0 +1,742 @@
+
+{%- if section.settings.enable_bar -%}
+  {%- unless section.settings.home_page_only and template != 'index' -%}
+    <section id="section-{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="announcement-bar">
+    <div class="Vorteilskommunikation">
+        {% for block in section.blocks %}
+
+            {% case block.type %}
+
+                {% when "bulletpoints" %}
+
+                    <div class="bulletpoints-wrapper">
+                        <div class="{% if block.settings.hm1%}hidemobile{%endif%} {% if block.settings.ht1%}hidetablet{%endif%} {% if block.settings.hn1%}hidenotebook{%endif%} {% if block.settings.hd1%}hidedesktop{%endif%} bulletpoint-item">
+                            <i class="coloredicon fa fa-{{block.settings.icon1}}"></i>
+                            <div>{{ block.settings.content1 | escape }}</div>
+                        </div>
+        
+                        <div class="{% if block.settings.hm2%}hidemobile{%endif%} {% if block.settings.ht2%}hidetablet{%endif%} {% if block.settings.hn2%}hidenotebook{%endif%} {% if block.settings.hd2%}hidedesktop{%endif%} bulletpoint-item">
+                            <i class="coloredicon fa fa-{{block.settings.icon2}}"></i>
+                            <div>{{ block.settings.content2 | escape }}</div>
+                        </div>
+        
+                        <div class="{% if block.settings.hm3%}hidemobile{%endif%} {% if block.settings.ht3%}hidetablet{%endif%} {% if block.settings.hn3%}hidenotebook{%endif%} {% if block.settings.hd3%}hidedesktop{%endif%} bulletpoint-item">
+                            <i class="coloredicon fa fa-{{block.settings.icon3}}"></i>
+                            <div>{{ block.settings.content3 | escape }}</div>
+                        </div>
+        
+                        <div class="{% if block.settings.hm4%}hidemobile{%endif%} {% if block.settings.ht4%}hidetablet{%endif%} {% if block.settings.hn4%}hidenotebook{%endif%} {% if block.settings.hd4%}hidedesktop{%endif%} bulletpoint-item">
+                            <i class="coloredicon fa fa-{{block.settings.icon4}}"></i>
+                            <div>{{ block.settings.content4 | escape }}</div>
+                        </div>
+        
+                        <div class="{% if block.settings.hm5%}hidemobile{%endif%} {% if block.settings.ht5%}hidetablet{%endif%} {% if block.settings.hn5%}hidenotebook{%endif%} {% if block.settings.hd5%}hidedesktop{%endif%} bulletpoint-item">
+                            <i class="coloredicon fa fa-{{block.settings.icon5}}"></i>
+                            {{ block.settings.content5 | escape }}
+                        </div>
+                    </div>
+      
+      
+                {% when "images" %}
+                      <div class="images-wrapper {% if block.settings.hm_images%}hidemobile{%endif%} {% if block.settings.ht_images%}hidetablet{%endif%} {% if block.settings.hn_images%}hidenotebook{%endif%} {% if block.settings.hd_images%}hidedesktop{%endif%}">
+                        {% if block.settings.bild-1 != nil %}
+                        <img width="24px" height="24px" loading="lazy" class="fit-image" src="{{block.settings.bild-1 | img_url}}" alt="{{block.settings.bild-1.alt}}">
+                        {%endif%}
+                        {% if block.settings.bild-2 != nil %}
+                        <img width="24px" height="24px" loading="lazy" class="fit-image" src="{{block.settings.bild-2 | img_url}}" alt="{{block.settings.bild-2.alt}}">
+                        {%endif%}
+                        {% if block.settings.bild-3 != nil %}
+                        <img width="24px" height="24px" loading="lazy" class="fit-image" src="{{block.settings.bild-3 | img_url}}" alt="{{block.settings.bild-3.alt}}">
+                        {%endif%}
+                      </div>
+      
+      			{% when "trusted_shop_widget" %}
+                            <div class="{% if block.settings.hm_trusted%}hidemobile{%endif%} {% if block.settings.ht_trusted%}hidetablet{%endif%} {% if block.settings.hn_trusted%}hidenotebook{%endif%} {% if block.settings.hd_trusted%}hidedesktop{%endif%}">
+                      			{% render "trustedshops-widget-selfmade" %}
+                            </div>
+                {% when "payment_methods" %}
+                    {% assign anbieter = block.settings.zahlungsanbieter | split: "," %}
+                    {%if block.settings.payments-enable-on-tablet %}
+                        {%- capture payment_methods_tablet -%}
+                          <div class="payment_methods hidemobile hidenotebook hidedesktop">
+                            {%- for type in anbieter limit:block.settings.anzahl_zahlungsmethoden  -%}
+                                {{ type | payment_type_svg_tag }}
+                            {%- endfor -%}
+                          </div>
+                        {%- endcapture -%}
+                    {%endif%}
+                    {%if block.settings.payments-enable-on-notebook %}
+                    {%- capture payment_methods_notebook -%}
+                    <div class="payment_methods hidemobile hidetablet hidedesktop">
+                      {%- for type in anbieter limit:block.settings.anzahl_zahlungsmethoden  -%}
+                      {{ type | payment_type_svg_tag }}
+                      {%- endfor -%}
+                    </div>
+                    {%- endcapture -%}
+                    {%endif%}
+                    {%if block.settings.payments-enable-on-desktop %}
+                    {%- capture payment_methods_desktop -%}
+                    <div class="payment_methods hidemobile hidetablet hidenotebook">
+                      {%- for type in anbieter limit:block.settings.anzahl_zahlungsmethoden  -%}
+                      {{ type | payment_type_svg_tag }}
+                      {%- endfor -%}
+                    </div>
+                    {%- endcapture -%}
+                    {%endif%}
+                    {%if block.settings.payments-enable-on-mobile %}
+                        {%- capture payment_methods_mobile -%}
+                          <div class="payment_methods hidedesktop hidetablet hidenotebook">
+                            {%- for type in anbieter limit: block.settings.anzahl_zahlungsmethoden_mobile -%}
+                              {{ type | payment_type_svg_tag }}
+                            {%- endfor -%}
+                          </div>
+                        {%- endcapture -%}
+                    {%endif%}
+                    
+                    {{payment_methods_mobile}}
+                    {{payment_methods_tablet}}
+                    {{payment_methods_notebook}}
+                    {{payment_methods_desktop}}
+                    
+                
+                {% when "contact_info" %}
+
+                    <div class="Kontaktinfo bulletpoints-wrapper {%if block.settings.hide_contactinfo_mobile %}hidemobile{%endif%} {%if block.settings.hide_contactinfo_tablet %}hidetablet{%endif%} {%if block.settings.hide_contactinfo_notebook %}hidenotebook{%endif%} {%if block.settings.hide_contactinfo_desktop %}hidedesktop{%endif%}">
+                        <i class="bulletpoint-item coloredicon fa fa-{{block.settings.iconkontakt}}"></i>
+                        <div>{{ block.settings.contentkontakt | escape }}</div>
+                    </div>
+        
+            {% endcase %}
+
+        {% endfor %}
+    </div>      
+    </section>
+
+    <style>
+
+      .bulletpoint-item{
+        white-space: nowrap;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+
+      
+      .coloredicon{
+        margin: 0px 5px 0px 10px;
+        color: {{section.settings.icon-color}};
+      }
+
+      
+
+      .Vorteilskommunikation{
+      border: 2px solid {{section.settings.border-color}};
+      display:flex;
+      font-size: {{section.settings.text-font-size}}rem;
+    }
+
+    .bulletpoints-wrapper{
+          display:flex;
+          flex-direction: row;
+          justify-content: space-between;
+        } 
+      
+    
+      
+            /*------------------------BEGIN  Desktop Modus  ----------------------------------------------
+      ------------------------------------------------------------------------------
+      ----------------------------------------------------------------------------------------------*/      
+      @media screen and (min-width: 1500px) {
+
+    .Vorteilskommunikation{
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: {{section.settings.padding_top_bottom}}px 10px;
+    }
+
+
+    .images-wrapper{
+      height: inherit; 
+      display:flex; 
+      flex-direction: row; 
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .payment_methods{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .payment_methods > *{
+      margin-right: 3px;
+    }
+      
+    .hidedesktop{
+    display:none !important;
+    }
+      
+      
+      
+      }
+         /*------------------------ ENDE Desktop Modus  ----------------------------------------------
+      ------------------------------------------------------------------------------
+      ----------------------------------------------------------------------------------------------*/
+      
+      
+            /*------------------------BEGIN Notebook Modus  ----------------------------------------------
+      ------------------------------------------------------------------------------
+      ----------------------------------------------------------------------------------------------*/   
+      
+      @media screen and (min-width: 1008px) and (max-width: 1499px) {
+        
+        .Vorteilskommunikation{
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          padding: {{section.settings.padding_top_bottom}}px 10px;
+        }
+
+
+        .images-wrapper{
+          height: inherit; 
+          display:flex; 
+          flex-direction: row; 
+          justify-content: space-between;
+          overflow: hidden;
+        }
+
+        .payment_methods{
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          overflow: hidden;
+        }
+
+        .payment_methods > *{
+          margin-right: 3px;
+        }
+        
+          
+        .hidenotebook {
+          display: none !important;
+        }
+      
+      
+      }
+      
+      /*------------------------ ENDE  Notebook Modus  ----------------------------------------------
+      ------------------------------------------------------------------------------
+      ----------------------------------------------------------------------------------------------*/
+      
+      
+      /*------------------------BEGIN  Tablet Modus  ----------------------------------------------
+      ------------------------------------------------------------------------------
+      ----------------------------------------------------------------------------------------------*/      
+      
+      @media screen and (min-width: 641px) and (max-width: 1007px) {
+        .hidetablet{
+          display:none !important;
+        }
+
+        .Vorteilskommunikation{
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: center;
+          padding: {{section.settings.padding_top_bottom}}px 10px;
+          width: 100%;
+        }
+        
+        .bulletpoints-wrapper{
+        	flex-direction:column;
+          	align-items: center;
+        }
+        
+
+
+      }
+      
+      
+   /*------------------------ ENDE  Tablet Modus  ----------------------------------------------
+      ------------------------------------------------------------------------------
+      ----------------------------------------------------------------------------------------------*/       
+      
+      
+
+/*------------------------BEGIN  Smarthphone Modus  ----------------------------------------------
+      ------------------------------------------------------------------------------
+      ----------------------------------------------------------------------------------------------*/      
+      
+      @media screen and (max-width: 640px) {
+        .hidemobile{
+          display:none !important;
+        }
+
+        .Vorteilskommunikation{
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: center;
+          padding: {{section.settings.padding_top_bottom}}px 10px;
+          width: 100%;
+        }
+        
+        .bulletpoints-wrapper{
+        	flex-direction:column;
+          	align-items: center;
+        }
+        
+
+
+      }
+      
+      
+   /*------------------------ ENDE  Smartphone Modus  ----------------------------------------------
+      ------------------------------------------------------------------------------
+      ----------------------------------------------------------------------------------------------*/       
+      
+      
+      
+      
+      
+      #section-{{ section.id }} {
+        background: {{ section.settings.background }};
+        color: {{ section.settings.text_color }};
+      }
+      
+      .fit-image{
+		min-height: 1rem;
+		min-width: 1rem;
+        max-height: 2rem;
+		max-width: 2rem; 
+    	padding: 5px;
+    	height: auto;
+		width: auto;
+      }
+      
+    </style>
+
+
+
+
+  {%- endunless -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Vorteilkommunikation",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_bar",
+      "label": "Aktivieren",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "home_page_only",
+      "label": "Nur auf der Startseite",
+      "default": false
+    },
+{
+      "type": "header",
+      "content": "Farben und Größen"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Hintergrund",
+      "default": "#000000"
+    },
+{
+      "type": "color",
+      "id": "icon-color",
+      "label": "Icon-Farbe",
+      "default": "#FF0000"
+    },
+{
+      "type": "color",
+      "id": "border-color",
+      "label": "Farbe Umrahmung",
+      "default": "#FF0000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Textfarbe",
+      "default": "#ffffff"
+    },
+{
+    "type":      "range",
+    "id":        "text-font-size",
+    "min":       0.1,
+    "max":        3,
+    "step":       0.1,
+    "unit":       "rem",
+    "label":     "Root em (rem) Font-Größe >> Orientiert sich am html body",
+    "default":   1
+},
+{
+  "type": "number",
+  "id": "padding_top_bottom",
+  "label": "Abstand (Innen) Oben Unten in Pixel",
+  "default": 10
+}
+  ],
+  "blocks": [
+    {
+      "type": "bulletpoints",
+      "name": "Bulletpoints",
+      "settings": [
+        {   "type": "header",
+            "content": "1. Vorteil"
+        },
+        {   "type":      "text",
+            "id":        "icon1",
+            "label":     "Vorteils-Icon 1",
+            "default":   "check",
+            "info":      "FontAwesome-Icon",
+            "placeholder": "FontAwesome"
+        },
+        {   "type": "text",
+            "id": "content1",
+            "label": "1. Vorteilstext",
+            "default": "1. Vorteil"
+        },
+        {	"type": "checkbox",
+            "id": "hm1",
+            "label": "Bei Mobilansicht ausblenden?",
+            "default": true
+        },
+        {	"type": "checkbox",
+            "id": "ht1",
+            "label": "Bei Tabletansicht ausblenden?",
+            "default": true
+        },
+        {	"type": "checkbox",
+            "id": "hn1",
+            "label": "Bei Notebookansicht ausblenden?",
+            "default": true
+        },
+        {	"type": "checkbox",
+            "id": "hd1",
+            "label": "Bei Desktopansicht ausblenden?",
+            "default": true
+        },
+        {   "type": "header",
+            "content": "2.Vorteil"
+        },
+        {
+            "type":      "text",
+            "id":        "icon2",
+            "label":     "Vorteils-Icon 2",
+            "default":   "check",
+            "info":      "FontAwesome-Icon",
+            "placeholder": "FontAwesome"
+        },
+        {   "type": "text",
+            "id": "content2",
+            "label": "2. Vorteilstext",
+            "default": "2. Vorteil"
+        },
+        {	"type": "checkbox",
+            "id": "hm2",
+            "label": "Bei Mobilansicht ausblenden?",
+            "default": true
+        },
+        {	"type": "checkbox",
+            "id": "ht2",
+            "label": "Bei Tabletansicht ausblenden?",
+            "default": true
+        },
+        {	"type": "checkbox",
+            "id": "hn2",
+            "label": "Bei Notebookansicht ausblenden?",
+            "default": true
+        },
+        {	"type": "checkbox",
+            "id": "hd2",
+            "label": "Bei Desktopansicht ausblenden?",
+            "default": true
+        },
+        {   "type": "header",
+            "content": "3.Vorteil"
+        },
+        {   "type":      "text",
+            "id":        "icon3",
+            "label":     "Vorteils-Icon 3",
+            "default":   "check",
+            "info":      "FontAwesome-Icon",
+            "placeholder": "FontAwesome"
+        },
+        {   "type": "text",
+            "id": "content3",
+            "label": "3. Vorteilstext",
+            "default": " 3. Vorteil"
+        },
+        {	"type": "checkbox",
+            "id": "hm3",
+            "label": "Bei Mobilansicht ausblenden?",
+            "default": false
+        },
+        {	"type": "checkbox",
+            "id": "ht3",
+            "label": "Bei Tabletansicht ausblenden?",
+            "default": false
+        },
+        {	"type": "checkbox",
+            "id": "hn3",
+            "label": "Bei Notebookansicht ausblenden?",
+            "default": false
+        },
+        {	"type": "checkbox",
+            "id": "hd3",
+            "label": "Bei Desktopansicht ausblenden?",
+            "default": false
+        },
+        {   "type": "header",
+            "content": "4.Vorteil"
+        },
+        {   "type":      "text",
+            "id":        "icon4",
+            "label":     "Vorteils-Icon 4",
+            "default":   "check",
+            "info":      "FontAwesome-Icon",
+            "placeholder": "FontAwesome"
+        },
+        {   "type": "text",
+            "id": "content4",
+            "label": "Vorteilstext 4",
+            "default": "4. Vorteil"
+        },
+        {	"type": "checkbox",
+            "id": "hm4",
+            "label": "Bei Mobilansicht ausblenden?",
+            "default": false
+        },
+        {	"type": "checkbox",
+            "id": "ht4",
+            "label": "Bei Tabletansicht ausblenden?",
+            "default": false
+        },
+        {	"type": "checkbox",
+            "id": "hn4",
+            "label": "Bei Notebookansicht ausblenden?",
+            "default": false
+        },
+        {	"type": "checkbox",
+            "id": "hd4",
+            "label": "Bei Desktopansicht ausblenden?",
+            "default": false
+        },
+        {   "type": "header",
+            "content": "5.Vorteil"
+        },
+        {   "type":      "text",
+            "id":        "icon5",
+            "label":     "Vorteils-Icon 5",
+            "default":   "lock",
+            "info":      "FontAwesome-Icon",
+            "placeholder": "FontAwesome"
+        },
+        {   "type": "text",
+            "id": "content5",
+            "label": "Vorteilstext",
+            "default": "5. Vorteil"
+        },
+        {	"type": "checkbox",
+            "id": "hm5",
+            "label": "Bei Mobilansicht ausblenden?",
+            "default": false
+        },
+        {	"type": "checkbox",
+            "id": "ht5",
+            "label": "Bei Tabletansicht ausblenden?",
+            "default": false
+        },
+        {	"type": "checkbox",
+            "id": "hn5",
+            "label": "Bei Notebookansicht ausblenden?",
+            "default": false
+        },
+        {	"type": "checkbox",
+            "id": "hd5",
+            "label": "Bei Desktopansicht ausblenden?",
+            "default": false
+        }
+      ]
+    },
+    {
+        "type": "images",
+        "name": "Bilder",
+        "settings": [
+            {   "type": "image_picker",
+                "id": "bild-1",
+                "label": "Bild 1"
+            },
+            {   "type": "image_picker",
+                "id": "bild-2",
+                "label": "Bild 2"
+            },
+            {   "type": "image_picker",
+                "id": "bild-3",
+                "label": "Bild 3"
+            },
+            {	"type": "checkbox",
+                "id": "hm_images",
+                "label": "Bei Mobilansicht ausblenden?",
+                "default": false
+            },
+            {	"type": "checkbox",
+                "id": "ht_images",
+                "label": "Bei Tabletansicht ausblenden?",
+                "default": false
+            },
+            {	"type": "checkbox",
+                "id": "hn_images",
+                "label": "Bei Notebookansicht ausblenden?",
+                "default": false
+            },
+            {	"type": "checkbox",
+                "id": "hd_images",
+                "label": "Bei Desktopansicht ausblenden?",
+                "default": false
+            }
+        ]
+    },
+    {
+        "type": "trusted_shop_widget",
+        "name": "Trusted Shop Widget",
+        "settings": [
+            {	"type": "checkbox",
+                "id": "hm_trusted",
+                "label": "Bei Mobilansicht ausblenden?",
+                "default": false
+            },
+            {	"type": "checkbox",
+                "id": "ht_trusted",
+                "label": "Bei Tabletansicht ausblenden?",
+                "default": false
+            },
+            {	"type": "checkbox",
+                "id": "hn_trusted",
+                "label": "Bei Notebookansicht ausblenden?",
+                "default": false
+            },
+            {	"type": "checkbox",
+                "id": "hd_trusted",
+                "label": "Bei Desktopansicht ausblenden?",
+                "default": false
+            }
+        ]
+    },
+    {
+      "type": "contact_info",
+      "name": "Kontaktinfo",
+      "settings": [
+        {	
+        "type": "checkbox",
+        "id": "hide_contactinfo_mobile",
+        "label": "Bei Mobilansicht ausblenden?",
+        "default": true
+        },
+        {	
+        "type": "checkbox",
+        "id": "hide_contactinfo_tablet",
+        "label": "Bei Tabletansicht ausblenden?",
+        "default": true
+        },
+        {	
+        "type": "checkbox",
+        "id": "hide_contactinfo_notebook",
+        "label": "Bei Notebookansicht ausblenden?",
+        "default": true
+        },
+        {	
+        "type": "checkbox",
+        "id": "hide_contactinfo_desktop",
+        "label": "Bei Desktopansicht ausblenden?",
+        "default": false
+        },
+        { "type":      "text",
+          "id":        "iconkontakt",
+          "label":     "Kontakt-Icon",
+          "default":   "phone",
+          "info":      "FontAwesome-Icon",
+          "placeholder": "FontAwesome"
+        },
+        { "type": "text",
+          "id": "contentkontakt",
+          "label": "Kontaktinfo",
+          "default": "Telefonnummer"
+        }
+      ]
+    },
+    {
+        "type": "payment_methods",
+        "name": "Payment Methods",
+        "settings": [
+
+      {
+      "type":      "range",
+      "id":        "anzahl_zahlungsmethoden",
+      "min":       1,
+      "max":        20,
+      "step":       1,
+      "unit":       "/20",
+      "label":     "Anzahl Desktop Zahlungsmethoden",
+      "default":   4
+      },
+
+      {
+      "type":      "range",
+      "id":        "anzahl_zahlungsmethoden_mobile",
+      "min":       1,
+      "max":        20,
+      "step":       1,
+      "unit":       "/20",
+      "label":     "Anzahl mobile Zahlungsmethoden",
+      "default":   4
+      },
+      {
+      "type": "checkbox",
+      "id": "payments-enable-on-mobile",
+      "label": "Auf Mobil aktivieren",
+      "default": true
+      },
+      {
+      "type": "checkbox",
+      "id": "payments-enable-on-tablet",
+      "label": "Auf Tablet aktivieren",
+      "default": true
+      },
+      {
+      "type": "checkbox",
+      "id": "payments-enable-on-notebook",
+      "label": "Auf Notebook aktivieren",
+      "default": true
+      },
+      {   
+	  "type": "checkbox",
+      "id": "payments-enable-on-desktop",
+      "label": "Auf Desktop aktivieren",
+      "default": true
+      },
+      {
+         "type":      "textarea",
+         "id":        "zahlungsanbieter",
+         "label":     "Zahlungsanbieter",
+         "default":   "american_express,apple_pay,eps,google_pay,klarna,maestro,master,paypal,shopify_pay,sofort,visa",
+         "info":      "Bitte mit Komma trennen!////american_express////apple_pay////eps////google_pay////klarna////maestro////master////paypal////shopify_pay////sofort////visa////",
+         "placeholder": "Bitte mit Komma trennen!"
+      }
+        ]
+    }
+
+  ]
+}
+{% endschema %}

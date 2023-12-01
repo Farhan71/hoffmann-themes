@@ -1,0 +1,91 @@
+<style>
+    .black_firday_cheerTxt {
+        font-size: 13px;
+        background: #fff;
+        border-radius: 4px;
+        padding: 8px;
+        letter-spacing: -0.1px;
+        margin-top: 12px;
+        position: relative;
+        filter: drop-shadow(1px 1px 3px rgba(0, 0, 0, 0.15));
+        color: #1e1e1e
+    }
+    .dynamic-checkout__skeleton .placeholder-line.placeholder-line--animated:first-child {
+    	display: none;
+    }
+    .sp-modal-backdrop {
+      display: none;
+    }
+</style>
+
+<script>
+let blackFridaySnippet = () => {
+
+    const waitForElement = (waitFor, callback, minElements = 1, isVariable = false, timer = 12000, frequency = 25) => {
+        let elements = isVariable ? window[waitFor] : document.querySelectorAll(waitFor);
+        if (timer <= 0) return;
+        ((!isVariable && elements.length >= minElements) || (isVariable && (typeof window[waitFor] !== 'undefined'))) ?
+        callback(elements):
+            setTimeout(() => waitForElement(waitFor, callback, minElements, isVariable, (timer - frequency)), frequency);
+    }
+
+    // Example usage
+    waitForElement('[data-testid="ShopifyPay-button"]', (element) => {
+        var liElement = document.querySelector('[data-testid="ShopifyPay-button"]').closest('li');
+        if (liElement) {
+            liElement.style.display = 'none';
+        }
+    });
+
+    waitForElement('.reduction-code span', (element) => {
+        const blackFridayText = document.querySelectorAll('.reduction-code span');
+        blackFridayText.forEach((item)=>{
+          if (item.textContent.includes('BLACKWEEK') && !document.querySelector('.black_firday_cheerTxt')) {
+              let cheerTxt = `<span style="color:#0F951C; font-weight:700;">Glückwunsch!</span> 🎉 Ihr <span style="color:#1E1E1E; font-weight:700;">
+                            20% Black Week-Rabatt</span> wurde erfolgreich aktiviert. (Nicht kombinierbar mit anderen Rabattcodes)`;
+  
+              waitForElement('.order-summary__section--product-list', (element) => {
+                  document.querySelector('.order-summary__section--product-list').insertAdjacentHTML('afterend', `<div class="black_firday_cheerTxt">${cheerTxt}</div>`);
+              })
+  
+              waitForElement('#checkout_reduction_code', (element) => {
+                  const discountField = document.querySelector('#checkout_reduction_code');
+                  //discountField.closest('.order-summary__section--discount').style.display = 'none';
+                  //discountField.closest('.order-summary__section--discount').remove();
+              });
+  
+              waitForElement('.section--reductions', (element) => {
+                  const discountField2 = document.querySelector('.section--reductions');
+                 // discountField2.style.display = 'none';
+                 // discountField2.remove();
+              });
+  
+  
+          }
+        });
+    });
+
+    // waitForElement(".notice__text", (element) => {
+        const noticeText = document.querySelector('.notice__text');
+        if (noticeText && noticeText.innerHTML.includes('Der Rabatt wurde gestrichen')) {
+            const notice = noticeText.closest('.notice');
+            notice.style.display = 'none';
+            notice.querySelector('.notice__controls').click();
+        }
+    // })
+
+    const errorCode = document.querySelector('#error-for-reduction_code');
+    if (errorCode) {
+        errorCode.style.display = 'none';
+    }
+
+    // waitForElement("#checkout_reduction_code", (element) => {
+        let discountField = document.querySelector('#checkout_reduction_code');
+        if (discountField) {
+            discountField.style.borderColor = '#d4d1c9';
+            discountField.style.boxShadow = 'unset';
+        }
+    // })
+};
+blackFridaySnippet();
+</script>

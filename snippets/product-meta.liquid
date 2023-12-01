@@ -1,0 +1,41 @@
+<div class="ProductMeta" {{ block.shopify_attributes }}>
+    {%- if block.settings.show_vendor and product.vendor != blank -%}
+      <h2 class="ProductMeta__Vendor Heading u-h6">
+        {%- assign vendor_handle = product.vendor | handle -%}
+        {%- assign collection_for_vendor = collections[vendor_handle] -%}
+  
+        {%- unless collection_for_vendor.empty? -%}
+          <a href="{{ collection_for_vendor.url }}">{{ product.vendor }}</a>
+        {%- else -%}
+          {{- product.vendor -}}
+        {%- endunless -%}
+      </h2>
+    {%- endif -%}
+  
+  {% if selected_variant.metafields.hashcom.dynamic_title != nil %}
+  {% assign product_title = selected_variant.metafields.hashcom.dynamic_title %}
+  {%else%}
+  {% assign product_title = product.title %}
+  {%endif%}
+  
+  
+    <h1 class="ProductMeta__Title Heading u-h2">
+      {%- if template.name == 'product' -%}
+        {{ product_title}}
+      {%- else -%}
+        <a href="{{ product.url }}">{{ product.title }}</a>
+      {%- endif -%}
+    
+{% comment %}Start automatically added Judge.me widget
+  {% render 'judgeme_widgets', widget_type: 'judgeme_preview_badge', concierge_install: true, product: product %}
+{% comment %}End automatically added Judge.me widget{% endcomment %}
+      {% endcomment %}
+</h1>
+</div>
+
+
+
+    
+      
+   
+  

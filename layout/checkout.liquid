@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="{{ locale }}" dir="{{ direction }}" class="{{ checkout_html_classes }}">
+  <head>
+    <!-- Google Tag Manager -->
+<script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'}); var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5ZRSCT9');
+</script>
+<!-- End Google Tag Manager -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, user-scalable=0">
+    <meta name="referrer" content="origin">
+    
+
+    <title>{{ page_title }}</title>
+
+    {{ content_for_header }}
+
+    {{ checkout_stylesheets }}
+     
+    {{ checkout_scripts }}
+    
+
+    <script src="https://cdn.ablyft.com/s/60091050.js"></script>
+
+    <!-- Hotjar Tracking Code for https://hoffmann-germany.de/ -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:1255245,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5ZRSCT9" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<!-- Adtribute.io Start -->
+<script>
+  var adbq = window.adbq || [];
+  var adbs = window.adbs || {};
+
+  adbs.accountId = 'lDdVWp';
+  adbs.domain = 'hoffmann-germany.de';
+
+  adbs.currentPage = new URL( window.location.href );
+  adbs.env = adbs.currentPage.searchParams.get( 'adb_debug' ) === 'true' ? 'dev' : 'prod';
+  adbs.version = adbs.currentPage.searchParams.get( 'adb_version' );
+  adbs.hasSessionStorageAccess = () => {
+    const test = 'sessionStorageWriteable';
+    try {
+      sessionStorage.setItem( 'test', test );
+      sessionStorage.removeItem( 'test' );
+
+      return true;
+    } catch ( e ) {
+      return false;
+    }
+  };
+  adbs.hasLocalStorageAccess = () => {
+    const test = 'localStorageWriteable';
+    try {
+      localStorage.setItem( 'test', test );
+      localStorage.removeItem( 'test' );
+
+      return true;
+    } catch ( e ) {
+      return false;
+    }
+  };
+  adbs.encodeInput = ( input ) => btoa( encodeURIComponent( JSON.stringify( input ) ) );
+  adbs.decodeInput = ( input ) => JSON.parse( decodeURIComponent( atob(  input ) ) );
+  adbs.isValidUrl = ( url ) => {
+    try {
+      new URL( url );
+
+      return true;
+    } catch ( e ) {
+      return false;
+    }
+
+  };
+  adbs.retry = 200;
+  adbs.load = ( a, d, e, v ) => {
+    const el = document.createElement( 'script' );
+    el.type = 'text/javascript';
+    el.async = true;
+    el.onerror = () => {
+      setTimeout( () => {
+
+        adbs.load( adbs.accountId, adbs.domain, adbs.env, adbs.version );
+
+        adbs.retry = adbs.retry * 1.5;
+
+      }, adbs.retry);
+
+    };
+    el.src = 'https://bundle.' + d + '/client?env=' + e + '&account_id=' + a + ( v ? '&version=' + v : '' );
+    const s = document.getElementsByTagName( 'script' )[0];
+    s.parentNode.insertBefore( el, s );
+
+  }
+  
+  {% if customer %}
+
+    adbq.push({
+      method: 'set',
+      user_attributes: {
+        $_shopify_customer_id: '{{customer.id}}',
+        $_email: '{{customer.email}}'
+      }
+    });
+
+  {% endif %}
+  
+  {% if checkout %}
+  
+    adbq.push({
+      method: 'set',
+      user_attributes: {
+        $_shopify_checkout_id: '{{checkout.id}}',
+        $_email: {% if checkout.email %}'{{checkout.email}}'{% else %}undefined{% endif %}
+      }
+    });
+   
+  {% endif %}
+  
+  {% if cart %}
+
+    if ( {{cart.item_count}} > 0 ) {
+      function trackShopifyCartId ( cartId ) {
+        if ( cartId ) {
+          adbq.push({
+            method: 'track',
+            event_name: 'Identify',
+            event_type: 'standard',
+            user_attributes: {
+              $_shopify_cart_id: cartId
+            }
+          });
+        }
+      };
+
+      function setShopifyCartId ( cartId ) {
+        if ( cartId ) {
+          adbq.push({
+            method: 'set',
+            user_attributes: {
+              $_shopify_cart_id: cartId
+            }
+          });
+        }
+      };
+
+      function fetchShopifyCartId () {
+        fetch( '/cart.json' ).then( response => response.json() ).then( json => {
+          setShopifyCartId( json.token );
+          trackShopifyCartId( json.token );
+
+          if ( adbs.hasSessionStorageAccess() && json.token ) {
+            sessionStorage.setItem( 'adb_shopify_cart_id', json.token );
+
+          }
+
+        });
+
+      };
+
+      if ( adbs.hasSessionStorageAccess() ) {
+        if ( sessionStorage.getItem( 'adb_shopify_cart_id' ) ) {
+          setShopifyCartId( sessionStorage.getItem( 'adb_shopify_cart_id') );
+
+        } else {
+          fetchShopifyCartId();
+
+        }  
+      } else {
+        fetchShopifyCartId();
+
+      }
+    }
+
+  {% endif %}
+  
+  {% if product %}
+
+   adbq.push({
+     method: 'track',
+     event_name: 'Viewed a product',
+     event_type: 'ecommerce',
+     ecommerce_attributes: [{
+       product_id: '{{product.id}}',
+       product_name: '{{product.title}}'
+     }]
+   });
+
+  {% endif %}
+  
+  adbq.push( {
+    method: 'track',
+    event_name: 'Viewed a page',
+    event_type: 'standard',
+    event_timestamp: new Date().getTime(),
+    page_url: adbs.currentPage.href,
+    referrer_url: document.referrer,
+    page_title: document.title
+  } );
+
+  if ( adbs.hasLocalStorageAccess() ) {
+    if ( localStorage.getItem( 'adbq' ) ) {
+      const storedQueue = JSON.parse( localStorage.getItem( 'adbq' ) );
+      storedQueue.map( event => adbq.push( event ) );
+    }
+
+    localStorage.setItem( 'adbq', JSON.stringify( adbq ) );
+
+  } else {
+    const storedQueue = adbs.currentPage.searchParams.get( 'adbq' );
+    if ( storedQueue ) {
+      adbs.decodeInput( storedQueue ).map( event => adbq.push( event ) );
+      adbs.currentPage.searchParams.delete( 'adbq' );
+      window.history.replaceState({}, document.title, adbs.currentPage.href );
+
+    }
+
+    document.querySelectorAll('a').forEach( link => {
+      let currentLink = link.getAttribute('href')
+      if ( adbs.isValidUrl( currentLink ) ) {
+        currentLink = new URL( link.getAttribute('href') );
+        currentLink.searchParams.set( 'adbq', adbs.encodeInput( adbq ) );
+        link.setAttribute( 'href', currentLink.href );
+      }
+    });
+
+  }
+
+  adbs.load( adbs.accountId, adbs.domain, adbs.env, adbs.version );
+</script>
+<!-- Adtribute.io End -->
+    
+    {{ skip_to_content_link }}
+
+    <header class="banner" data-header role="banner">
+      <div class="wrap">
+        {{ content_for_logo }}
+      </div>
+    </header>
+
+    {{ order_summary_toggle }}
+    <div class="content" data-content>
+      <div class="wrap">
+        <div class="main">
+          <header class="main__header" role="banner">
+            {{ content_for_logo }}
+            {{ breadcrumb }}
+            {{ alternative_payment_methods }}
+          </header>
+          <main class="main__content" role="main">
+            {{ content_for_layout }}
+          </main>
+          <footer class="main__footer" role="contentinfo">
+            {{ content_for_footer }}
+          </footer>
+        </div>
+        <aside class="sidebar" role="complementary">
+          <div class="sidebar__header">
+            {{ content_for_logo }}
+          </div>
+          <div class="sidebar__content">
+            {{ content_for_order_summary }}
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    {{ tracking_code }}
+    {%  if settings.shipping_script_enable == true %}
+        {% render "checkout_shipping_script" %}
+      {% endif %}
+  {%  if settings.texts_script_enable == true %}
+        {% render "checkout_texts_script" %}
+      {% endif %}
+    {% render "checkout_dataLayer" %}
+
+    {% if settings.checkout_civic_number_required %}
+    	{% render "checkout_civic_number_required" %}
+    {%endif%}
+    {% if settings.back_to_cart_previous_page %} 
+    {% render "checkout_back_to_cart" %}
+     {%endif%}
+
+
+
+
+
+     {% if settings.preorder_script_enable %}
+      {% render 'checkout_preorder_script' %}
+     {% endif %}
+
+    {% if settings.black_friday_sale %}
+      {% render 'black-friday'   %}
+    {% endif %}
+    
+  </body>
+</html>

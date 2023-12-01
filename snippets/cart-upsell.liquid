@@ -1,0 +1,209 @@
+{{'slick.css' | asset_url | stylesheet_tag }}
+{{'slick-theme.css' | asset_url | stylesheet_tag }}
+{{'slick.min.js' | asset_url | script_tag }}
+
+{% assign cart_items = cart.items | map: 'product_id' | join: ", " %}
+{% unless cart.item_count == 0 %}
+    <div class="section cu-hoffmann-badges text-center" id="cart-upsell">
+        <div class="cu-container">
+            <div class="cu-hoffman-badges-title">
+                <h2 class="text-center cu-title">{{section.settings.upsell_text | escape}}</h2>
+            </div>
+            <div class="cu-hoffman-badges-carousel cu-badges-loaded">
+                <div class="cu-hoffman-stage-outer">
+                    <div class="cu-badges-stage">
+{%assign upsell_blocks = section.blocks | where: "type", "upsell-product" %}
+                        {% for upsell in  upsell_blocks %}
+                        {% assign product = all_products[upsell.settings.product_handle] %}
+                            {% if product.first_available_variant.available %}
+                                {% if cart_items contains product.id %}
+                                    {% continue %}
+                                {% else %}
+                                <div class="cu-hoffman-badges-item">
+                                    <div class="cu-badges-item ">
+                                        <div class="upsell-wrapper"> <!--Wrapper Upsell Beginn</p>-->
+                                            <div class="cu-item-title" id="upsell-title-{{forloop.index}}">
+                                                {%if upsell.settings.product_title != nil %}
+                                                    {{upsell.settings.product_title }}
+                                                {%else%}
+                                                    {{product.title}}
+                                                {%endif%}
+                                            </div>
+                                            <div class="text-center cu-item-image">
+                                                <a href="{{ product.url }}"> <img style="display: inline-block; vertical-align: middle; height: 100%;" id="upsell-img-{{forloop.index}}" src="{{product.images | first | img_url }}" /> </a>
+                                            </div>
+                                            <div class="cu-item-subdescription text-center" id="upsell-price-{{forloop.index}}">
+                                                {{ product.first_available_variant.price | money_without_trailing_zeros }}
+                                            </div>
+                                            <div class="add-upsell">
+                                                <i onclick="addupsell({{product.first_available_variant.id}})" style="cursor:pointer; font-size:30px;" data-action="update-item-quantity" id="add-upsell-{{forloop.index}}" class="fa fa-{{section.settings.upsell_icon}}"></i>
+                                            </div>
+                                        </div>
+                                    </div><!--Wrapper Upsell Ende</p>-->
+                                </div>
+                                {%endif%}
+                            {% endif %}          
+                        {%endfor%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{%endunless%}
+
+<style>
+    /*Cart Upsell Slick*/
+
+    div.cu-hoffmann-badges {
+    position: relative;
+    margin: 0;
+    text-align: center;
+    }
+    div.cu-hoffmann-badges .cu-container {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding: 0 15px;
+    }
+    div.cu-hoffmann-badges .cu-container .cu-hoffman-badges-title {
+    /* margin-bottom: 10px;
+    */
+    }
+    div.cu-hoffmann-badges .cu-container .cu-hoffman-badges-title p.cu-subtitles {
+    font-size: 13px;
+    line-height: 15px;
+    letter-spacing: 0.1em;
+    margin-bottom: 0;
+    }
+    div.cu-hoffmann-badges .cu-container .cu-hoffman-badges-title h2.cu-title {
+    color: #1c1c1c;
+    font-size: 16px;
+    line-height: 29px;
+    letter-spacing: 0.05em;
+    font-weight: bold;
+    }
+    div.cu-hoffmann-badges .cu-container .cu-hoffman-badges-carousel .cu-badges-stage {
+    display: flex;
+    justify-content: center;
+    }
+    div.cu-hoffmann-badges .cu-container .cu-hoffman-badges-carousel .cu-badges-stage .cu-hoffman-badges-item {
+    margin: 0 10px;
+    width: auto;
+    }
+    div.cu-hoffmann-badges .cu-container .cu-hoffman-badges-carousel .cu-badges-stage .cu-hoffman-badges-item
+    .cu-badges-item {
+    max-width: 250px;
+    margin: 0 auto;
+    padding: 2.5px 2.5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    }
+    div.cu-hoffmann-badges .cu-container .cu-hoffman-badges-carousel .cu-badges-stage .cu-hoffman-badges-item
+    .cu-badges-item .cu-item-title h3 {
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    line-height: 1.618;
+    }
+    div.cu-hoffmann-badges .cu-container .cu-hoffman-badges-carousel .cu-badges-stage .cu-hoffman-badges-item
+    .cu-badges-item .cu-item-image img {
+    max-width: 100%;
+    width: 100%;
+    object-fit: contain;
+    }
+    div.cu-hoffmann-badges .cu-container .cu-hoffman-badges-carousel .cu-badges-stage .cu-hoffman-badges-item
+    .cu-badges-item .cu-item-subdescription p {
+    line-height: 1.618;
+    font-size: 14px;
+    }
+
+
+    .upsell-wrapper{
+    height: 100%;
+    display:grid;
+    grid-template:
+    "Image Title Add"
+    "Image Price Add";
+    grid-template-columns: 25% 60% 15%;
+    grid-template-rows: 50% 50%;
+    }
+
+    .cu-item-image{
+    grid-area: Image;
+    mix-blend-mode: darken;
+    }
+
+    .cu-item-title{
+    font-size: 12px;
+    font-weight: bold;
+    grid-area: Title;
+    word-wrap: break-word;
+    line-height: 12px;
+    height: 24px;
+    overflow: hidden;
+    padding: 0px 5px;
+    }
+
+    .cu-item-subdescription{
+    grid-area: Price;
+    font-size: 16px;
+    font-weight: bold;
+    align-self: end;
+    }
+
+    .cu-container{
+    height:15vh;
+    display: contents;
+    }
+
+    .add-upsell{
+    grid-area: Add;
+    }
+
+    .cu-badges-item{
+    background-color: {{section.settings.upsell-background}};
+    }
+</style>
+
+
+<script>     
+    function addupsell(upsellid){
+    jQuery.post('/cart/add.js', {
+    items: [{
+    quantity: 1,
+    id: upsellid
+    }]
+    }).done(function() {
+    document.documentElement.dispatchEvent(new CustomEvent('cart:refresh', {
+    bubbles: true
+    }));
+    });
+    }
+    function upsell_slick(){
+    //Cart Upsell Aufruf, da die Funktion aufgerufen werden muss, wenn man auf den Warenkorb klickt
+    $(document).ready(function(){
+    $('.cu-badges-stage').slick({
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    dots: false,
+    centerMode: true,
+    {% if section.settings.upsell-autoplay %}
+    autoplay: true,
+    autoplaySpeed: {{section.settings.cart-upsell-autoplay-delay}},
+    {%endif %}
+    focusOnSelect: true,
+    infinite: true
+    });
+      if(document.getElementById("sidebar-cart").getElementsByClassName("slick-track").length > 0){
+    if (document.getElementById("sidebar-cart").getElementsByClassName("slick-track")[0].childElementCount == 0){
+    document.getElementById("cart-upsell").style.display = "none";
+    }
+    }
+    });
+
+    }
+</script>
+
+
+
+

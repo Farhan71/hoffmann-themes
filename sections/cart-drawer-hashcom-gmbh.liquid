@@ -1,0 +1,31 @@
+
+{%- comment -%}{%- endcomment -%}{% render 'cart-discounts-hashcom-gmbh'}
+{% render 'cart-drawer' %}
+
+
+{% schema %}
+{ 
+    "name": "Auswahl Upsell-Produkte",
+    "settings": [
+    ], 
+    "blocks": [
+    {
+      "type": "upsell-product",
+      "name": "Upsell Produkt",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product_handle",
+          "label": "Produkt"
+        },
+        {
+            "type": "textarea",
+            "id": "product_title",
+            "label": "Produkt-Titel",
+            "info": "Wenn leer, wird Standard-Produkt Titel verwendet. Unterstützt auch HTML-Codierungen!"
+        }
+      ]
+    }
+  ]
+  }
+  {% endschema %}

@@ -1,0 +1,35 @@
+<script>
+      const collectCartDataForViewCart = (data) => {
+        const cartItemsGA = [];
+          data.items.forEach((product,i)=>{
+           let cartItem= {
+                item_id: product.product_id,
+                item_name: product.product_title,
+                coupon: 0,
+                discount: 0,
+                index: i,
+                price: product.price/100.0 ,
+                item_variant: product.variant_title,
+                quantity: product.quantity
+              }
+            cartItemsGA.push(cartItem);
+        });
+          dataLayer.push({ ecommerce: null });
+            dataLayer.push({
+            event: "GA4_view_cart",
+            ecommerce: {
+              currency: {{ shop.currency | json }},
+              value: data.total_price/100.0,
+              items: cartItemsGA
+            }
+          });
+      };
+  
+      document.querySelectorAll(`a[data-drawer-id="sidebar-cart"]`).forEach((item)=>{
+         item.addEventListener('click',()=>{
+            fetch(window.Shopify.routes.root + 'cart.js')
+                .then(response => response.json())
+                .then(data => collectCartDataForViewCart(data));
+         }); 
+      });
+</script>

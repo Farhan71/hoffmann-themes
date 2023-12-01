@@ -1,0 +1,210 @@
+<section>
+ <div class="kundenservice-mit-bilder">
+{% for block in section.blocks %}
+  {% case block.type %}
+  {%when "kundenservice" %}
+  {% comment%} KUNDENSERVICE // START{%endcomment%}
+       
+   <div class="cs-faq-wrapper  ks-item">       
+   <div class="cs-faq">
+            <div class="cs-main">
+              <div class="cs-avatar">
+                <img width="180px" height="180px" loading="lazy" src="{{block.settings.service_image | img_url: '450x400'}}" alt="{{block.settings.service_image.alt}}"> 
+              </div>
+
+              <div class="cs-content">
+                <div class="Heading u-h4 title cs-title">{{block.settings.service_heading}}</div>
+                <div>{{block.settings.service_text}}</div>
+              </div>
+            </div>
+
+            <div class="cs-contact">
+              <a href="{{block.settings.button1_link}}" class="cs-phone" aria-describedby="a11y-external-message">{{block.settings.button1_label}}</a>  
+              <a href="{{block.settings.button2_link}}" class="cs-email" aria-describedby="a11y-external-message">{{block.settings.button2_label}}</a>
+            </div>
+
+          </div>
+   </div>
+          
+          <style>
+            .cs-faq {
+              display: flex;
+              flex-direction: column;
+              border-radius: 0.125rem;
+              box-shadow: rgb(0 0 0 / 5%) 0px 0.0625rem 0.375rem, rgb(0 0 0 / 8%) 0px 0.0625rem 0.25rem;
+              /*margin-top: 1.75rem;*/
+              background-color: rgb(255, 255, 255);
+            }
+            
+            .cs-main {
+              display: flex;
+              flex-direction: row;
+              -webkit-box-align: center;
+              align-items: center;
+            }
+            
+            .cs-avatar {
+              max-width: 200px;
+              margin: 0px 1rem;
+            }
+            
+            .cs-content {
+              font-size: 0.875rem;
+              line-height: 1.33;
+              letter-spacing: 0.01875rem;
+              font-style: normal;
+              font-weight: 400;
+              /*color: #38565c;*/
+              padding-right: 1rem;
+              padding-bottom: 0.625rem;
+            }
+            
+            .cs-title {
+              padding: 0.75rem 1rem 0.25rem 0px;
+            }
+            
+            .cs-contact {
+              font-size: 1rem;
+              line-height: 1.375;
+              letter-spacing: 0.0375rem;
+              font-style: normal;
+              font-weight: 500;
+              display: flex;
+              flex-direction: row;
+              text-align: center;
+            }
+            
+            .cs-phone {
+              display: flex;
+              -webkit-box-align: center;
+              align-items: center;
+              -webkit-box-pack: center;
+              justify-content: center;
+              width: 100%;
+              border-top: 0.0625rem solid rgb(230, 230, 230);
+              padding: 1rem;
+              /*color: #18404b;*/
+              line-height: 1;
+              font-weight: 600;
+            }
+            
+            .cs-email {
+              display: flex;
+              -webkit-box-align: center;
+              align-items: center;
+              -webkit-box-pack: center;
+              justify-content: center;
+              width: 100%;
+              border-top: 0.0625rem solid rgb(230, 230, 230);
+              padding: 1rem;
+              /*color: #18404b;*/
+              line-height: 1;
+              border-left: 0.0625rem solid rgb(230, 230, 230);
+              font-weight: 600;
+            }
+            
+          </style>
+          
+          
+          
+          {% comment%} KUNDENSERVICE // ENDE {%endcomment%}
+  {%when "bild"%}
+  <div class="kundenservice-image-wrapper ks-item">
+  <img width="400px" height="150px" loading="lazy" class="kundenservice-image-item" src="{{block.settings.bild | image_url | img_url: "700x300" }}">
+   </div>
+  {%endcase%}
+  {%endfor%}
+  </div>
+</section>
+
+<style>
+  
+  
+  .kundenservice-image-wrapper{
+    display:flex;
+    justify-content: center;
+  
+  }
+
+  
+  .kundenservice-mit-bilder{
+  	display:flex;
+    justify-content: space-between;
+    align-items: center;
+    
+  }
+  
+</style>
+
+{% schema %}
+{
+"name": "Kundenservice mit Bilder",
+"class": "shopify-section",
+"blocks": [
+{
+    "type": "kundenservice",
+    "name": "Kundenservice",
+    "settings": [
+{
+"type": "header",
+"content": "Kundenservice"
+},
+{
+"type": "image_picker",
+"id": "service_image",
+"label": "Bild"
+},
+{
+"type": "textarea",
+"id": "service_heading",
+"label": "Überschrift"
+},
+{
+"type": "textarea",
+"id": "service_text",
+"label": "Text-Inhalt"
+},
+{
+"type": "textarea",
+"id": "button1_label",
+"label": "Button 1 Label"
+},
+{
+"type": "textarea",
+"id": "button1_link",
+"label": "Button 1 Wert",
+"info": "Für Telefonnummer benutze: 'tel:+49123456', für Email benutze: 'mailto:info@hoffmann.de'"
+},
+{
+"type": "textarea",
+"id": "button2_label",
+"label": "Button 2 Label"
+},
+{
+"type": "textarea",
+"id": "button2_link",
+"label": "Button 2 Wert",
+"info": "Für Telefonnummer benutze: 'tel:+49123456', für Email benutze: 'mailto:info@hoffmann.de'"
+}
+    ]
+},
+{
+    "type": "bild",
+    "name": "Bild",
+    "settings": [
+{
+"type": "image_picker",
+"id": "bild",
+"label": "Bild"
+}
+]}
+],
+  "presets": [
+    {
+      "category": "Custom",
+      "name": "Kundenservice mit Bilder",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

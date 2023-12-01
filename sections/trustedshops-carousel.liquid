@@ -1,0 +1,80 @@
+<script id="trusted_carousel_loader">
+  var loaded = false;
+  $(window).scroll(function () {
+    if(!loaded){
+            if ($(window).scrollTop() + $(window).height() > $("#trusted_carousel").offset().top)
+            {
+              var div = `{{section.settings.snippet_code}}`;
+                $('#trusted_carousel').replaceWith(div);
+              	$("#trusted_carousel_loader").remove();
+              loaded = true;
+              
+            }
+  }
+        });
+</script>
+{% unless section.settings.heading_trusted_carousel == blank and section.settings.subheading_trusted_carousel == blank %}
+<div class="trusted_carousel_heading_wrapper">
+      <header class="SectionHeader SectionHeader--center">
+            {%- if section.settings.heading_trusted_carousel != blank -%}
+              <h2 class="SectionHeader__Heading Heading u-h1">{{ section.settings.heading_trusted_carousel | escape }}</h2>
+            {%- endif -%}
+  
+            {%- if section.settings.subheading_trusted_carousel != blank -%}
+              <h3 class="SectionHeader__SubHeading Heading u-h6">{{ section.settings.subheading_trusted_carousel | escape }}</h3>
+            {%- endif -%}
+        </header>
+</div>
+{% endunless %}
+<div id="trusted_carousel">
+</div>
+
+ <style>
+      .trusted_carousel_heading_wrapper {
+        margin-top: {{section.settings.margin_top_section}}px;
+      }
+  </style>
+
+{% schema %}
+  {
+    "name": "Trustedshops Carousel",
+    "settings": [
+        {
+          "type": "number",
+          "id": "margin_top_section",
+          "label": "Margin Top in pixel",
+          "default": 20
+        },
+        {
+          "type": "text",
+          "id": "heading_trusted_carousel",
+          "label": "Heading for Trusted Carousel",
+          "default": "<p>Heading of Trusted Carousel</p>"
+        },
+        {
+          "type": "text",
+          "id": "subheading_trusted_carousel",
+          "label": "Subheading for Trusted Carousel",
+		  "default": "<p>Subheading of Trusted Carousel</p>"
+        },	
+		{
+          "type": "textarea",
+          "id": "snippet_code",
+          "label": "Trustedshops Widget Code"
+        }
+],
+  "presets": [
+    {
+      "category": "Trustedshops",
+      "name": "Trustedshops Carousel",
+      "settings": {}
+    }
+  ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

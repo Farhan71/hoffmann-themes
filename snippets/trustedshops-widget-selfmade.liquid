@@ -1,0 +1,44 @@
+
+{%style%}
+.trustedshopwidget-wrapper{
+      height: inherit; 
+      display:flex; 
+      flex-direction: row; 
+      justify-content: space-between;
+      overflow: hidden;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+    }
+      .trustedshop-stars{
+        color: {{settings.trustedshops_stars_color}};
+        /*color: #FFD700;*/
+        margin: 0px;
+      }
+      
+      .trustedshop-logo-wrapper{
+      display: flex;
+      align-items: center;
+      }
+
+	
+
+{%endstyle%}
+
+
+<div class="trustedshopwidget-wrapper">
+  <div class="trustedshop-stars-wrapper">
+    <i class="fa fa-{{settings.star-one-to-four}} trustedshop-stars"></i>
+    <i class="fa fa-{{settings.star-one-to-four}} trustedshop-stars"></i>
+    <i class="fa fa-{{settings.star-one-to-four}} trustedshop-stars"></i>
+    <i class="fa fa-{{settings.star-one-to-four}} trustedshop-stars"></i>
+    <i class="fa fa-{{settings.star-five}} trustedshop-stars"></i>
+  </div>
+  <div class= "trustedshop-text-wrapper">
+    <span>{{settings.trustedshops-rating}}</span> <span>{{settings.trustedshops-text}}</span> 
+  </div>
+  <div class="trustedshop-logo-wrapper">
+    <img width="24px" height="24px" class="fit-image" src="{{settings.trustedshops-logo | img_url}}" alt="{{settings.trustedshops-logo}}" loading="lazy">
+  </div>
+</div>
+

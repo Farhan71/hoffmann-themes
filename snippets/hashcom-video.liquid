@@ -1,0 +1,33 @@
+{%- comment -%}
+        width: video_source.width,
+        height: video_source.height,
+        class: "video_desktop",
+        alt: section.settings.video_desktop.alt | escape,
+        loop: section.settings.loop,
+        controls: section.settings.controls,
+        audio_active: section.settings.audio_active,
+        audio_onstart_vol: section.settings.audio_onstart_vol,
+        autoplay: section.settings.autoplay,
+        url: video_source.url,
+        thumbnail: section.settings.thumbnail_desktop
+{%- endcomment -%}
+
+  <div class="video-wrapper-hashcom  {{class}}">
+    <div class="bulletpoints-title-wrapper">
+      {% if heading != blank %} <h2 style="margin:0;" class="SectionHeader__Heading Heading u-h1 bulletpoints_heading seo_title">{{heading}}</h2>{{trennlinie}} {% endif %}
+      {% if subheading != blank %} <p class="SectionHeader__SubHeading Heading u-h6 bulletpoints_subheading seo_text">{{subheading}}</p>{% endif %}
+    </div>
+<video 
+    defaultMuted 
+    onloadstart="start(this, {{audio_onstart_vol | default: 0}}, {{audio_active | default: false}})"   
+    {%if thumbnail != nil %} poster="{{thumbnail | image_url: width: width, height: height }}" {%endif%}
+    {%if loop == true %} loop {%endif%}
+    {%if controls == true%} controls {%endif%} 
+    {%if autoplay == true %} autoplay {% else %} preload="none" {%endif%}
+    class="video-width"
+    mysrc="{{url}}"
+    src=""  
+    alt="{{alt}}"
+>
+</video>
+</div>

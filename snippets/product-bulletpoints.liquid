@@ -1,0 +1,37 @@
+<style>
+    .bulletpoints_container{
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bulletpoints_item{
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      align-items: baseline;
+      margin-bottom: {{block.settings.bulletpoint_item_margin_bottom}}px;
+    }
+    .bulletpoint_text{
+    margin-left: {{block.settings.text_margin_left}}px;
+    }
+  </style>
+    <div class="bulletpoints_container">
+      {% unless block.settings.text1 == blank %}
+      <div class="bulletpoints_item">
+        <i class="fa fa-{{block.settings.icon1}}" style="color: {{block.settings.icon1_color}};"></i>
+        <div class="bulletpoint_text" style="color: {{block.settings.text1_color}};">{{block.settings.text1}}</div>
+      </div>
+      {% endunless %}
+      {% unless block.settings.text2 == blank %}
+      <div class="bulletpoints_item">
+        <i class="fa fa-{{block.settings.icon2}}" style="color: {{block.settings.icon2_color}};"></i>
+        <div class="bulletpoint_text" style="color: {{block.settings.text2_color}};">{{block.settings.text2}}</div>
+      </div>
+      {% endunless %}
+      {% unless block.settings.text3 == blank %}
+      <div class="bulletpoints_item">
+        <i class="fa fa-{{block.settings.icon3}}" style="color: {{block.settings.icon3_color}};"></i>
+        <div class="bulletpoint_text" style="color: {{block.settings.text3_color}};">{{block.settings.text3}}</div>
+      </div>
+      {% endunless %}
+    </div>

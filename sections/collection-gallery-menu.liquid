@@ -1,0 +1,463 @@
+{% assign tag_handle = '' %}
+<div class="Container">
+
+  <div class="collection-gallery-menu-wrapper">
+    {% for block in section.blocks %}
+    {% if block.settings.menu-item-tags != blank %}
+    	{% assign tags = block.settings.menu-item-tags | split: ',' %}
+          {% for tag in tags %}
+    	  {% assign handleize_tag = tag | handleize %}
+          {% if forloop.first == true %}
+          		{% assign tag_handle = '/' | append: handleize_tag %}
+          {% else %}
+          {% assign tag_handle = tag_handle | append: '+' | append: handleize_tag %}
+    	  {% endif %}
+    	{% endfor %}
+    {% assign tag_handle = tag_handle %}
+    {% endif %}
+
+    <div class="collection-gallery-menu-item-wrapper collection-gallery-menu-item-wrapper-hover">
+      {% if block.settings.menu-item-link != blank %}
+      <a class="home-collection-gallery-menu-item-anchor" href="{{block.settings.menu-item-link}}{{tag_handle}}">
+        {% endif %}
+        
+        {% if block.settings.menu-item-image != blank %}
+        <img class="home-collection-gallery-menu-item" height="300px" width="400px" src="{{ block.settings.menu-item-image | image_url | img_url: "700x450" }}" alt="{{ block.settings.menu-item-image.alt | escape }}" loading="lazy">
+        {% endif %}
+        
+        	{% if block.settings.menu-item-link-text != blank %}
+            <div class="collection-gallery-text-icon-wrapper">
+              {% if block.settings.menu-item-link-text != blank %}
+              <span class="collection-gallery-menu-item-link-text Heading">{{block.settings.menu-item-link-text}}</span>
+              {% endif %}
+              {% if section.settings.icon-after-text != blank and block.settings.menu-item-link-text != blank %}
+              <i class="fa fa-{{section.settings.icon-after-text}} collection-gallery-menu-item-icon"></i>
+              {% endif %}
+            </div>
+        	{% endif %}
+        
+        	{% if block.settings.menu-item-badge-text != blank %}
+            <div class="collection-gallery-badge-wrapper hidden-phone">
+				<span class="collection-gallery-menu-item-badge Heading
+                {% if section.settings.badge-position == "top-left" %} collection-gallery-menu-item-badge-left 
+                {% elsif section.settings.badge-position == "top-right" %}collection-gallery-menu-item-badge-right{% endif %}">
+                  {{block.settings.menu-item-badge-text}}
+              	</span>
+            </div>
+        	{% endif %}
+        
+          {% if block.settings.menu-item-badge-text-mobile != blank %}
+          <div class="collection-gallery-badge-wrapper hidden-tablet-and-up">
+            <span class="collection-gallery-menu-item-badge Heading
+                         {% if section.settings.badge-position == "top-left" %} collection-gallery-menu-item-badge-left 
+                         {% elsif section.settings.badge-position == "top-right" %}collection-gallery-menu-item-badge-right{% endif %}">
+              {{block.settings.menu-item-badge-text-mobile}}
+            </span>
+          </div>
+          {% endif %}
+        
+        {% if block.settings.menu-item-link != blank %}
+      </a>
+      {% endif %}
+    </div>
+
+    {% endfor %}
+  </div>
+
+</div>
+<style>
+       /*------------------------ ANFANG  GLOBAL  ----------------------------------------------
+      	----------------------------------------------------------------------------------------------*/  
+    
+
+  
+  .collection-gallery-menu-wrapper{
+      display: flex;
+      flex-direction: row;
+      column-gap: {{section.settings.horizontal-spacing}}rem;
+      row-gap: {{section.settings.vertical-spacing}}rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  .collection-gallery-menu-wrapper img.home-collection-gallery-menu-item,
+  .collection-gallery-menu-wrapper a.home-collection-gallery-menu-item-anchor{
+    width: 100%;
+  }
+
+  .collection-gallery-menu-item-link-text{
+  	color: {{section.settings.link-text-color}};
+  }
+
+    .collection-gallery-menu-item-icon{
+      color: {{section.settings.icon-after-text-color}};
+    }	
+  
+  .collection-gallery-menu-item-wrapper{
+    position: relative;
+  }
+  
+  .collection-gallery-menu-item-wrapper-hover:hover img {
+    filter: brightness(0.90);
+  }
+
+    .collection-gallery-text-icon-wrapper{
+      position: absolute;
+      top: 95%;
+      left: 50%;
+      transform: translateY(-95%) translateX(-50%);
+	  white-space: nowrap;
+      padding: 0.1rem 0.5rem;
+      background:{{section.settings.link-text-background-color}};
+      border-radius: {{section.settings.badge-link-text-border-radius}}px;
+}
+  
+  .collection-gallery-badge-wrapper{
+    white-space: nowrap;
+  }
+  .collection-gallery-menu-item-badge-left{
+      background:{{section.settings.badge-background-color}};
+      color:{{section.settings.badge-text-color}};
+      line-height: inherit;
+      padding: 0.1rem 0.5rem;
+      border-radius: {{section.settings.badge-link-text-border-radius}}px;
+      align-items: center;
+      position: absolute;
+      top: {{section.settings.badge-spacing-vertical}}rem;
+      left: {{section.settings.badge-spacing-horizontal}}rem;
+	  
+  }
+  
+    .collection-gallery-menu-item-badge-right{
+      background:{{section.settings.badge-background-color}};
+      color:{{section.settings.badge-text-color}};
+      line-height: inherit;
+      padding: 0.1rem 0.5rem;
+      border-radius: {{section.settings.badge-link-text-border-radius}}px;
+      align-items: center;
+      position: absolute;
+      top: {{section.settings.badge-spacing-vertical}}rem;
+      right: {{section.settings.badge-spacing-horizontal}}rem;
+  }
+      
+    
+  
+         /*------------------------ ENDE  GLOBAL  ----------------------------------------------
+      	----------------------------------------------------------------------------------------------*/  
+
+  
+             /*------------------------ ANFANG  Desktop-Modus  ----------------------------------------------
+      	----------------------------------------------------------------------------------------------*/        
+        @media screen and (min-width: 1008px) {
+        .collection-gallery-menu-item-wrapper{
+            display: flex;
+          	flex-basis: calc((100% - {{section.settings.menu-item-count-desktop|minus:1}}*{{section.settings.horizontal-spacing}}rem)/{{section.settings.menu-item-count-desktop}});
+            max-width: calc((100% - {{section.settings.menu-item-count-desktop|minus:1}}*{{section.settings.horizontal-spacing}}rem)/{{section.settings.menu-item-count-desktop}});
+            align-items: center;
+            justify-content: center;
+        }
+          .collection-gallery-menu-section-wrapper
+          {
+            margin-top: 20px;
+            margin-left: 200px;
+            margin-right: 200px;
+          }
+          .collection-gallery-text-icon-wrapper
+          {
+            font-size: 20px;
+          }
+          .collection-gallery-menu-item-badge{
+            font-size: 16px;
+          }
+        }
+          
+         /*------------------------ ENDE  Desktop-Modus  ----------------------------------------------
+      	----------------------------------------------------------------------------------------------*/
+  
+  
+  
+         /*------------------------ ANFANG  Tablet-Modus  ----------------------------------------------
+      	----------------------------------------------------------------------------------------------*/        
+        @media screen and (min-width: 641px) and (max-width: 1007px) {
+        .collection-gallery-menu-item-wrapper{
+            display: flex;
+          	flex-basis: calc((100% - {{section.settings.menu-item-count-tablet|minus:1}}*{{section.settings.horizontal-spacing}}rem)/{{section.settings.menu-item-count-tablet}});
+            max-width: calc((100% - {{section.settings.menu-item-count-tablet|minus:1}}*{{section.settings.horizontal-spacing}}rem)/{{section.settings.menu-item-count-tablet}});
+            align-items: center;
+            justify-content: center;
+        }
+          
+          .collection-gallery-menu-section-wrapper
+          {
+            margin-top: 20px;
+            margin-left: 50px;
+            margin-right: 50px;
+          }
+          
+          .collection-gallery-text-icon-wrapper
+          {
+            font-size: 15px;
+          }
+          
+          .collection-gallery-menu-item-badge{
+            font-size: 14px;
+          }
+          
+        }
+
+
+          
+         /*------------------------ ENDE  Tablet-Modus  ----------------------------------------------
+      	----------------------------------------------------------------------------------------------*/       
+      
+    
+      
+
+  		 /*------------------------ANFANG  Smartphone-Modus  ----------------------------------------------
+          ----------------------------------------------------------------------------------------------*/      
+
+          @media screen and (max-width: 640px) {
+            .collection-gallery-menu-item-wrapper{
+              display: flex;
+              flex-basis: calc((100% - {{section.settings.menu-item-count-mobile|minus:1}}*{{section.settings.horizontal-spacing}}rem)/{{section.settings.menu-item-count-mobile}});
+              max-width: calc((100% - {{section.settings.menu-item-count-mobile|minus:1}}*{{section.settings.horizontal-spacing}}rem)/{{section.settings.menu-item-count-mobile}});
+              align-items: center;
+              justify-content: center;
+            }
+            
+            .collection-gallery-menu-section-wrapper
+            {
+              margin-top: 20px;
+              margin-left: 20px;
+              margin-right: 20px;
+            }
+            
+            .collection-gallery-text-icon-wrapper
+            {
+              font-size: 14px;
+            }
+            
+            .collection-gallery-menu-item-badge{
+              font-size: 14px;
+            }
+            
+            .hide-mobile
+
+		  }
+
+         /*------------------------ ENDE  Smartphone-Modus  ----------------------------------------------
+        ----------------------------------------------------------------------------------------------*/  
+    
+</style>
+
+{% schema %}
+  {
+    "name": "Collection Gallery Menu",
+    "settings": [
+	{
+      "type": "header",
+      "content": "Abstandseinstellungen"
+    },
+    {
+      "type": "range",
+      "id": "horizontal-spacing",
+      "min": 0.1,
+      "max": 2,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Horizontaler Abstand (Spaltenabstand)",
+      "default": 0.5
+    },
+    {
+      "type": "range",
+      "id": "vertical-spacing",
+      "min": 0.1,
+      "max": 2,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Vertikaler Abstand (Reihenabstand)",
+      "default": 0.5
+    },
+	{
+      "type": "header",
+      "content": "Einstellungen für Menü-Elemente"
+    },
+    {
+      "type": "range",
+      "id": "menu-item-count-desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "label": "Anzahl der Menü-Elemente (Desktop)",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "menu-item-count-tablet",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "label": "Anzahl der Menü-Elemente (Tablet)",
+      "default": 3
+    },
+    {
+    "type": "radio",
+    "id": "menu-item-count-mobile",
+    "label": "Anzahl der Menü-Elemente (Mobile)",
+    "options": [
+    {
+    "value": "1",
+    "label": "1"
+    },
+    {
+    "value": "2",
+    "label": "2"
+    }
+    ],
+    "default": "2"
+    },
+	{
+      "type": "color",
+      "id": "link-text-color",
+      "label": "Farbe für Linktext",
+      "default": "#000000"
+    },
+    {
+      "type": "color_background",
+      "id": "link-text-background-color",
+      "label": "Linktext Hintergrundfarbe",
+      "default": "#FFFFFF"
+    },
+	{
+      "type": "header",
+      "content": "Icon-Einstellungen"
+    },
+    {
+    "type":"text",
+    "id":"icon-after-text",
+    "label":"Icon nach Linktext"
+    },
+	{
+      "type": "color",
+      "id": "icon-after-text-color",
+      "label": "Farbe für Icon nach Linktext",
+      "default": "#000000"
+    },
+	{
+      "type": "header",
+      "content": "Badge-Einstellungen"
+    },
+    {
+      "type": "color_background",
+      "id": "badge-background-color",
+      "label": "Badge Hintergrundfarbe",
+      "default": "#FFFFFF"
+    },
+	{
+      "type": "color",
+      "id": "badge-text-color",
+      "label": "Badge Textfarbe",
+      "default": "#000000"
+    },
+    {
+    "type": "radio",
+    "id": "badge-position",
+    "label": "Badge Position",
+    "options": [
+    {
+    "value": "top-left",
+    "label": "Oben Links"
+    },
+    {
+    "value": "top-right",
+    "label": "Oben Rechts"
+    }
+    ],
+    "default": "top-left"
+    },
+    {
+      "type": "range",
+      "id": "badge-link-text-border-radius",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Border Radius (Badge und Linktext)",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "badge-spacing-vertical",
+      "min": 0.1,
+      "max": 2,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Vertikaler Abstand zum Rand",
+	  "info": "Abstand Oben zum Rand",
+      "default": 0.5
+    },
+    {
+      "type": "range",
+      "id": "badge-spacing-horizontal",
+      "min": 0.1,
+      "max": 2,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Horizontaler Abstand zum Rand",
+	  "info": "Abstand Links bzw. Rechts zum Rand",
+      "default": 0.5
+    }
+],
+     "blocks":[
+              {
+              "type":"menu_item",
+              "name":"Menu Item",
+              "settings":[
+              {
+                "type": "image_picker",
+                "id": "menu-item-image",
+                "label": "Bild"
+              },
+			  {
+              "type":"text",
+              "id":"menu-item-link-text",
+              "label":"Linktext"
+              },
+              {
+              "type": "url",
+              "id": "menu-item-link",
+              "label": "Link"
+              },
+			  {
+              "type":"text",
+              "id":"menu-item-badge-text",
+              "label":"Badgetext Tablet and Up"
+              },
+			  {
+              "type":"text",
+              "id":"menu-item-badge-text-mobile",
+              "label":"Badgetext Mobile"
+              },
+			  {
+              "type":"text",
+              "id":"menu-item-tags",
+              "label":"Tags",
+			  "info" : "Tags zum filtern"
+              }
+           ]
+        }
+     ],
+  "presets": [
+    {
+      "category": "Text",
+      "name": "Collection Gallery Menu",
+      "settings": {}
+    }
+  ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

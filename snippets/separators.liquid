@@ -1,0 +1,43 @@
+{%- comment -%}
+
+    SNIPPET USAGE:
+    {% render 'separators', type: section.settings.separator_type %}
+
+
+    SECTION USAGE:
+    {
+  "type": "select",
+  "id": "separator_type",
+  "label": "Art der Trennline",
+  "options": [
+    {
+      "value": "dots",
+      "label": "Dots"
+    },
+    {
+      "value": "line",
+      "label": "Linie"
+    },
+    {
+      "value": "none",
+      "label": "Keine"
+    }
+  ],
+  "default": "line",
+  "info": "Einstellungen für die Trennlinien unter Theme-Einstellungen --> HASH-COM Trennlinien möglich."
+},
+{%- endcomment -%}
+
+{%- case type -%}
+    {%- when "line" -%}
+        <hr class="separators separator_line">
+    {%- when "dots" -%}
+        {% assign dots_count = settings.separator_dots_count %}
+        <div class="separators separator_dots">
+            {% for i in (1..dots_count) %}
+                <div class="separator_dot"></div>
+            {% endfor %}
+        </div>
+    
+        
+{%- endcase -%}

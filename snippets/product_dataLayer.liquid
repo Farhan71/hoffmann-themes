@@ -1,0 +1,66 @@
+{% assign discount_value = 0 %}
+{% assign product_first_variant = product.selected_or_first_available_variant %}
+{% if product_first_variant.compare_at_price > product_first_variant.price %}
+  {% assign discount_value = product_first_variant.compare_at_price | minus: product_first_variant.price %}
+{% endif %}
+
+<script>
+    dataLayer.push({ ecommerce: null });
+    dataLayer.push({
+    event: "GA4_view_item",
+    ecommerce: {
+      currency: {{ shop.currency | json }},
+      value: {{ product_first_variant.price | money_without_currency | replace: ",", "." }},
+      items: [
+          {
+              item_id: {{ product.id  | json }},
+              item_name: {{ product.title | json }},
+              coupon: 0,
+              discount: {{ discount_value | money_without_currency | replace: ",", "." }},
+              index: 0,
+              item_variant: {{ product_first_variant.title | json }},
+              price: {{ product_first_variant.price | money_without_currency  | replace: ",", "."  }},
+              quantity: 1
+            },
+      ]
+    }
+  });
+</script>
+
+<script>
+        const collectCartData = (data) => {
+            dataLayer.push({ ecommerce: null });
+              dataLayer.push({
+              event: "GA4_add_to_cart",
+              ecommerce: {
+                currency: {{ shop.currency | json }},
+                value: data.price/100.0,
+                items: [
+                    {
+                        item_id: {{ product.id | json}},
+                        item_name: {{ product.title | json }},
+                        coupon: 0,
+                        discount: {{ discount_value | money_without_currency | json }},
+                        index: 0,
+                        price: data.price/100.0 ,
+                        item_variant: data.variant_title,
+                        quantity: 1
+                      },
+                ]
+              }
+            });
+        }
+
+  const observer = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+          if (entry.initiatorType === "fetch" && entry.name.includes('cart/add.js')) {
+              fetch(window.Shopify.routes.root + 'cart.js')
+                  .then(response => response.json())
+                  .then(data => collectCartData(data.items[0]));
+          }
+      }
+  });
+  observer.observe({
+      entryTypes: ["resource"]
+  });
+</script>

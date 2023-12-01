@@ -1,0 +1,110 @@
+<script>
+  
+   const productsGA = [];
+      {% for line_item in checkout.line_items %}
+          var product = {
+              item_id: {{ line_item.product.id | json }},
+              item_name: {{ line_item.product.title | json }},
+              {% for discount_application in checkout.discount_applications %}
+                coupon: {{ discount_application.title | json }},
+              {% endfor %}
+              index: {{ forloop.index }},
+              item_category: {{ line_item.product.type | json }},
+              item_brand: {{ line_item.product.vendor | json }},
+              item_variant: {{ line_item.variant.title | json }},
+              price: {{ line_item.original_price | money_without_currency | replace: ",", "."  }},
+              quantity: {{ line_item.quantity | json }},
+              discount: {{ line_item.line_level_total_discount | money_without_currency | replace: ",", "." }}
+          }
+          productsGA.push(product);
+      {% endfor %}
+      
+  (function($) {
+  $(document).on("page:load page:change", function() {
+    if(Shopify.Checkout.step === 'contact_information') {
+              console.log("contact_information");
+            dataLayer.push({ ecommerce: null }); 
+            dataLayer.push({
+                event: 'GA4_begin_checkout',
+                ecommerce: {
+                    currency: {{ shop.currency | json }},
+                    value: {{ checkout.total_price  | money_without_currency |  replace: ",", "."  }},
+                    {% for discount_application in checkout.discount_applications %}
+                      coupon: {{ discount_application.title | json }},
+                    {% endfor %}
+                    items:productsGA
+                }  
+            });
+        }
+    
+      if(Shopify.Checkout.step === 'shipping_method') {
+        console.log("shipping_method");
+          var next_button=document.querySelector(`.step[data-step="shipping_method"] button[id="continue_button"]`);
+          next_button.addEventListener('click',()=>{
+            document.querySelectorAll('.section--shipping-method .content-box__row').forEach((item)=>{
+            if(item.querySelector('input').checked){
+                let shipping_method=item.querySelectorAll('span')[0].innerText;
+                 dataLayer.push({ ecommerce: null }); 
+                 dataLayer.push({
+                event: 'GA4_add_shipping_info',
+                ecommerce: {
+                    currency: {{ shop.currency | json }},
+                    value: {{ checkout.total_price  | money_without_currency | replace: ",", "."  }},
+                    {% for discount_application in checkout.discount_applications %}
+                      coupon: {{ discount_application.title | json }},
+                    {% endfor %}
+                    shipping_tier: `${shipping_method}`,
+                    items:productsGA
+                  }  
+                });
+              }
+            });
+          });
+          
+        }
+       if(Shopify.Checkout.step === 'payment_method') {
+              console.log("payment_method");
+                var next_button=document.querySelector(`.step[data-step="payment_method"] button[id="continue_button"]`);
+                next_button.addEventListener('click',()=>{
+                  document.querySelectorAll('.section--payment-method .content-box__row').forEach((item)=>{
+                  if(item.querySelector('input') && item.querySelector('input').checked){
+                      let payment_method=item.querySelector('label').innerText;
+                      console.log('payment_method', payment_method);
+                       dataLayer.push({ ecommerce: null }); 
+                       dataLayer.push({
+                      event: 'GA4_add_payment_info',
+                      ecommerce: {
+                          currency: {{ shop.currency | json }},
+                          value: {{ checkout.total_price  | money_without_currency | replace: ",", "."  }},
+                          {% for discount_application in checkout.discount_applications %}
+                            coupon: {{ discount_application.title | json }},
+                          {% endfor %}
+                          payment_type: `${payment_method}`,
+                          items:productsGA
+                        }  
+                      });
+                    }
+                  });
+                });
+          
+        }
+         if(Shopify.Checkout.step === 'thank_you') {
+           console.log("thank_you");
+              window.dataLayer = window.dataLayer || [];
+              dataLayer.push({ ecommerce: null });
+              dataLayer.push({
+                  event: 'GA4_purchase',
+                  ecommerce: {
+                      transaction_id: {{ checkout.order_id  | json }},
+                      currency: {{ shop.currency | json }}, 
+                      value: {{ checkout.total_price | money_without_currency | replace: ",", "."  }},
+                      tax:{{ checkout.tax_price | money_without_currency | replace: ",", "."  }},
+                      shipping: {{ checkout.shipping_price | money_without_currency | replace: ",", "."  }},
+                      items: productsGA
+                  } 
+              });
+            }
+  });
+})(Checkout.$);
+
+</script>

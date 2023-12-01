@@ -1,0 +1,145 @@
+<style>
+      [data-address-civic-number-warning]{
+        color:#e22120;
+      }
+
+    .step[data-step='contact_information'] form .field__additional-info{
+    display:none;
+  }
+</style>
+<script>
+  //       (function($) {
+  //   $(document).on("page:load page:change", function() {
+  //     if (Shopify.Checkout.step === "contact_information") {
+  //       $("#checkout_shipping_address_address1").on("input", function(e) {
+  //         if(hausnummer_angegeben()){
+  //           	document.getElementById("continue_button").disabled=false;
+  //         }else{
+  //         	document.getElementById("continue_button").disabled=true;
+  //         }
+  //       });
+  //     }
+  //   });
+  // })(Checkout.$);
+
+  //       function hausnummer_angegeben(){
+  //       	var hasNumber = /\d/;
+  //         var address1_value = document.getElementById("checkout_shipping_address_address1").value;
+  //         var result = hasNumber.test(address1_value)
+  //         return result;
+  //       }
+</script>
+
+<script>
+  
+
+    // ---------------------- CHECKOUT CONATCT INFORMATION INPUT VALIDATION ----------------------------- //
+  const checkoutValidation=()=>{
+      const form = document.querySelector(".step[data-step='contact_information'] form");
+      const submit_button= form.querySelector('#continue_button');
+      if (form) {
+        const email_input=form.querySelector('.field__input-wrapper [name="checkout[email]"]');
+        const first_name_input=form.querySelector('.field__input-wrapper [name="checkout[shipping_address][first_name]"]');
+        const last_name_input=form.querySelector('.field__input-wrapper [name="checkout[shipping_address][last_name]');
+        const address_input=form.querySelector('.field__input-wrapper [name="checkout[shipping_address][address1]"]');
+        const city_input=form.querySelector('.field__input-wrapper [name="checkout[shipping_address][city]"]');
+        const addressRegex= /.*\d+.*/;
+        
+    
+            form.addEventListener("submit", function (event) {
+            document.querySelectorAll('#custom-error-message').forEach((item)=>item?.remove());
+                event.preventDefault();
+                const errors = [];
+    
+                // Validate first name
+                if (first_name_input) {
+                    if (first_name_input.value.trim() === "") {
+                        errors.push("Geben Sie Ihren Vornamen ein");
+                        showErrorMessage(
+                            first_name_input,
+                            "Geben Sie Ihren Vornamen ein"
+                        );
+                    }
+                }
+    
+                // Validate last name
+                if (last_name_input) {
+                    if (last_name_input.value.trim() === "") {
+                        errors.push("Geben Sie Ihren Nachnamen ein");
+                        showErrorMessage(
+                            last_name_input,
+                            "Geben Sie Ihren Nachnamen ein"
+                        );
+                    }
+                }
+    
+                // Validate email
+                if (email_input) {
+                    const email = email_input.value.trim();
+    
+                    if (!email) {
+                        errors.push("Geben Sie eine gültige E-Mail-Adresse ein");
+                        showErrorMessage(email_input, "Geben Sie eine gültige E-Mail-Adresse ein");
+                    }
+                }
+    
+                // Validate address
+                 if (address_input) {
+                    if (address_input.value.trim() === "") {
+                        errors.push("Geben Sie Ihre Adresse ein");
+                        showErrorMessage(
+                            address_input,
+                            "Geben Sie Ihre Adresse ein"
+                        );
+                    }
+                    else if (!addressRegex.test(address_input.value)) {
+                      errors.push("Fügen Sie eine Hausnummer hinzu. Keine vorhanden? Bitte 0 eintragen.");
+                      showErrorMessage(
+                          address_input,
+                          `Fügen Sie eine Hausnummer hinzu. Keine vorhanden? Bitte 0 eintragen.`
+                      );
+                    }
+                }
+    
+                // Validate address
+                   if (city_input) {
+                      if (city_input.value.trim() === "") {
+                          errors.push("Geben Sie Ihre Postleitzahl ein");
+                          showErrorMessage(
+                              city_input,
+                              "Geben Sie Ihre Postleitzahl ein"
+                          );
+                      }
+                  }
+             
+    
+                // Display errors or prevent form submission
+                if (errors.length > 0) {
+                    event.preventDefault();
+                  setTimeout(()=>{
+                    submit_button.classList.remove('btn--loading');
+                    submit_button.removeAttribute('disabled')
+                  }, 50);
+                    
+                    return false; // Prevent form submission
+                } else {
+                    form.submit(); // Allow form submission
+                }
+            });
+         }
+     function showErrorMessage(input,message) {
+          const parentEl=input.parentElement;
+          const parrentWraper= parentEl.parentElement;
+          // parrentWraper.classList.remove('field--show-floating-label');
+          parrentWraper.classList.add('field--error');
+          const error_message=`<p class="field__message field__message--error" id="custom-error-message">${message}</p>`;
+       if(!parrentWraper.querySelector('.field__message--error')){
+          parentEl.insertAdjacentHTML('afterend',error_message);
+         console.log('enter eror')
+       }
+      }
+  }
+  document.querySelector(".step[data-step='contact_information'] form") && checkoutValidation();
+        
+
+</script>

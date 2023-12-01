@@ -1,0 +1,195 @@
+{% assign exception_collections_array = section.blocks | where: "type", "exception-collection" | map: "settings" | map: "exception_collection" %}
+{% assign cart_discounts_array = section.blocks | where: "type", "cart-discount" | map: "settings" |sort: "rabatt-anzahl" | json %}
+{% assign discount_items = 0 %}
+<script>
+   window.discount_levels = {{cart_discounts_array}};
+</script>
+{%- assign for_drawer = false -%}
+
+{%- if section.id == 'mini-cart' -%}
+  {%- assign for_drawer = true -%}
+{%- endif -%}
+
+<div class="Cart__ItemList">
+  {%- unless for_drawer -%}
+    <div class="Cart__Head hidden-phone">
+      <span class="Cart__HeadItem Heading Text--subdued u-h7">{{ 'cart.items.product' | t }}</span>
+      <span class="Cart__HeadItem"></span>
+      <span class="Cart__HeadItem Heading Text--subdued u-h7" style="text-align: center">{{ 'cart.items.quantity' | t }}</span>
+      <span class="Cart__HeadItem Heading Text--subdued u-h7" style="text-align: right">{{ 'cart.items.total' | t }}</span>
+    </div>
+  {%- endunless -%}
+
+
+  {%- for line_item in cart.items -%}
+
+    {% assign is_preorder = false %}
+    {% assign downcase_product_tags = line_item.product.tags | downcase %}
+    {% assign downcase_preorder_activation_tag = settings.preorder_activation_tag | downcase %}
+    {% if settings.preorder_activation_tag != blank and downcase_product_tags contains downcase_preorder_activation_tag %}
+      {% assign is_preorder = true %}
+    {% endif %}
+
+    {%- if for_drawer -%}
+      <div class="CartItemWrapper">
+    {%- endif -%}
+
+    <div class="CartItem">
+      <div class="CartItem__ImageWrapper AspectRatio">
+        <div class="AspectRatio" style="--aspect-ratio: {{ line_item.image.aspect_ratio }}">
+          <img class="CartItem__Image" src="{{ line_item.image | img_url: '240x' }}" alt="{{ line_item.image.alt | escape }}">
+        </div>
+      </div>
+
+      <div class="CartItem__Info"  
+          data-original_price_per_piece="{{line_item.original_price}}"
+          data-original_price_all="{{line_item.original_price |times:line_item.quantity}}"
+          {% for exception_collection in exception_collections_array %}
+            {% assign discount_allowed = true %}
+            {% assign break_parent_loop = false %}
+            {% for item_collection in line_item.product.collections %}
+              {% if item_collection.handle == exception_collection.handle %}
+                {% assign discount_allowed = false %}
+                {% assign break_parent_loop = true %}
+                {% break %}
+              {% endif %}
+            {%endfor%}
+            {% if break_parent_loop %}
+              {% break %}          
+            {% endif %}
+          {% endfor %}
+          {% if discount_allowed %}
+            {% assign discount_items = discount_items | plus : line_item.quantity %}        
+          {% endif %}
+            data-discount_allowed="{{discount_allowed}}"
+            data-item_qty="{{line_item.quantity}}"
+      > 
+        <h2 class="CartItem__Title Heading">
+          <a href="{{ line_item.url }}">{{ line_item.product.title }}</a>
+        </h2>
+
+        <div class="CartItem__Meta Heading Text--subdued">
+          {%- unless line_item.product.has_only_default_variant -%}
+            <p class="CartItem__Variant">{{ line_item.variant.title }}</p>
+          {%- endunless -%}
+
+          {%- if line_item.selling_plan_allocation -%}
+            <p class="CartItem__PlanAllocation">{{ line_item.selling_plan_allocation.selling_plan.name }}</p>
+          {%- endif -%}
+
+          {%- if line_item.properties != empty -%}
+            <ul class="CartItem__PropertyList">
+              {%- for property in line_item.properties -%}
+                {%- assign first_character_in_key = property.first | truncate: 1, '' -%}
+
+                {%- if property.last == blank or first_character_in_key == '_' -%}
+                  {%- continue -%}
+                {%- endif -%}
+
+                <li class="CartItem__Property">{{ property.first }}: {{ property.last }}</li>
+              {%- endfor -%}
+              
+
+            </ul>
+          {%- endif -%}
+
+          {% if is_preorder == true and settings.preorder_carttext != blank %}
+            <style>
+              .preorder_carttext{
+                color: {{settings.preorder_carttext_color}};
+              }
+            </style>
+            <ul class="CartItem__PropertyList">
+              <li class="CartItem__Property preorder_carttext">{{ settings.preorder_carttext }}</li>
+            </ul>
+          {% endif %}
+
+
+          <div class="CartItem__PriceList">
+            {%- if line_item.original_price != line_item.final_price -%}
+              <span id="item_discounted_price" class="CartItem__Price Price Price--highlight">{{ line_item.final_price | money_without_trailing_zeros }}</span>
+              <span id="item_original_price" class="CartItem__OriginalPrice Price">{{ line_item.original_price | money_without_trailing_zeros }}</span>
+            {%- else -%}
+              <!-- <span id="item_discounted_price" class="newprice" style="float:right;"></span> -->
+              <span id="item_discounted_price" class="CartItem__Price Price Price--highlight"></span>
+              <span id="item_original_price" class="CartItem__OriginalPrice Price">{{ line_item.final_price | money_without_trailing_zeros }}</span>
+            {%- endif -%}
+
+              <ul class="CartItem__DiscountList">
+                <li class="CartItem__Discount hidden">
+                    {%- render 'icon' with 'sale' -%}
+                    <span></span>
+                  </li>
+            
+              </ul>
+          </div>
+
+          {%- if line_item.unit_price_measurement -%}
+            <div class="CartItem__UnitPriceMeasurement">
+              <div class="UnitPriceMeasurement Heading Text--subdued">
+                <span class="UnitPriceMeasurement__Price">{{ line_item.unit_price | money_without_trailing_zeros }}</span>
+                <span class="UnitPriceMeasurement__Separator">/ </span>
+
+                {%- if line_item.unit_price_measurement.reference_value != 1 -%}
+                  <span class="UnitPriceMeasurement__ReferenceValue">{{ line_item.unit_price_measurement.reference_value }}</span>
+                {%- endif -%}
+
+                <span class="UnitPriceMeasurement__ReferenceUnit">{{ line_item.unit_price_measurement.reference_unit }}</span>
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+
+        {%- capture item_actions -%}
+          <div class="CartItem__Actions Heading Text--subdued" style="text-align: center">
+            <div class="CartItem__QuantitySelector">
+              <div class="QuantitySelector">
+                {%- assign quantity_minus_one = line_item.quantity | minus: 1 -%}
+
+                <a class="QuantitySelector__Button Link Link--primary" title="{{ 'cart.items.set_quantity' | t: new_quantity: quantity_minus_one }}" href="{{ routes.cart_change_url }}?quantity={{ quantity_minus_one }}&line={{ forloop.index }}" data-quantity="{{ quantity_minus_one }}" data-line="{{ forloop.index }}" data-action="update-item-quantity">
+                  {%- render 'icon' with 'minus' -%}
+                </a>
+
+                <input type="text" name="updates[]" id="updates_{{ line_item.key }}" class="QuantitySelector__CurrentQuantity" pattern="[0-9]*" data-line="{{ forloop.index }}" value="{{ line_item.quantity }}">
+
+                {%- assign quantity_plus_one = line_item.quantity | plus: 1 -%}
+
+                <a class="QuantitySelector__Button Link Link--primary" title="{{ 'cart.items.set_quantity' | t: new_quantity: quantity_plus_one }}" href="{{ routes.cart_change_url }}?quantity={{ quantity_plus_one }}&line={{ forloop.index }}" data-quantity="{{ quantity_plus_one }}" data-line="{{ forloop.index }}" data-action="update-item-quantity">
+                  {%- render 'icon' with 'plus' -%}
+                </a>
+              </div>
+            </div>
+
+            <a href="{{ routes.cart_change_url }}?quantity=0&line={{ forloop.index }}" class="CartItem__Remove Link Link--underline Link--underlineShort" data-quantity="0" data-line="{{ forloop.index }}" data-action="remove-item">{{ 'cart.items.remove' | t }}</a>
+          </div>
+        {%- endcapture -%}
+
+        {{ item_actions }}
+      </div>
+
+      {%- unless for_drawer -%}
+        {{ item_actions }}
+
+        <div class="CartItem__LinePriceList Heading Text--subdued" style="text-align: right">
+          {%- if line_item.original_line_price != line_item.final_line_price -%}
+            <span class="CartItem__Price Price Price--highlight">{{ line_item.final_line_price | money_without_trailing_zeros }}</span>
+            <span class="CartItem__Price Price Price--compareAt">{{ line_item.original_line_price | money_without_trailing_zeros }}</span>
+          {%- else -%}
+            <span class="CartItem__Price Price">{{ line_item.final_line_price | money_without_trailing_zeros }}</span>
+          {%- endif -%}
+        </div>
+      {%- endunless -%}
+    </div>
+
+    {%- if for_drawer -%}
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+</div>
+
+
+
+  
+
+
+

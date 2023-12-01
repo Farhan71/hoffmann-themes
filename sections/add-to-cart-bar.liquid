@@ -1,0 +1,603 @@
+{% if section.settings.enable_section %}
+
+{%comment%}
+=================================================
+Trusted Shops Widget with Text
+=================================================
+{%endcomment%}
+{% capture trusted_with_text %}
+	{% assign ts_block = section.blocks | where: "type","trusted_shop" %}
+	{% assign ts_block = ts_block[0].settings %}
+
+	{%if ts_block.enable_trustedshops %}
+		<div class="atc_bar_trusted_wrapper hidden-phone">
+		{% render "trustedshops-widget-selfmade" %}
+		</div>
+	{%endif%}
+
+	{%style%}
+	.trusted_with_text .text{
+		color: {{ts_block.text_color}};
+	}
+	{%endstyle%}
+	
+	<div class="text SectionHeader__SubHeading Heading u-h6">
+      {% if product.metafields.hashcom.atc_bar_text_under_trustedshops.value != blank %}
+      	{{product.metafields.hashcom.atc_bar_text_under_trustedshops.value}}
+      {% elsif ts_block.text != blank %}
+      	{{ts_block.text}}
+      {%endif%}
+	</div>
+{% endcapture %}
+
+
+{%comment%}
+=================================================
+Bilder
+=================================================
+{%endcomment%}
+{% capture images %}
+	{% assign image_blocks = section.blocks | where: "type","image" %}
+	{%comment%}
+	========== LOAD ALL IMAGES FROM BLOCKS FIRST =================
+	{%endcomment%}
+	{%for imageblock in image_blocks %}
+		{% if imageblock.settings.image_src == "file" %}
+			<div class="image_item">
+      			<img src="{{imageblock.settings.file_img|image_url: height: 30}}" alt="{{imageblock.settings.file_img.alt}}" height="30">
+			</div>	
+		{%elsif imageblock.settings.image_src == "asset" %}
+			<div class="image_item">
+      			<img src="{{imageblock.settings.asset_img|asset_url}}" alt="{{imageblock.settings.asset_img|split:"."|first}}">
+			</div>	
+		{%endif%}
+	{%endfor%}
+
+	{%comment%}
+	========== LOAD ALL FILE-IMAGES FROM METAFIELDS =================
+	{%endcomment%}
+
+	{% assign file_images = product.metafields.hashcom.atc_bar_image_from_files %}
+	{% assign file_images_array = file_images |split: "," %}
+
+	{% for image in file_images_array %}
+		<div class="image_item">
+      			<img src="{{image | file_img_url: "x30"}}" alt="{{image|split:"."|first}}" height="30">
+		</div>
+	{% endfor %}
+
+	{%comment%}
+	========== LOAD ALL ASSET-IMAGES FROM METAFIELDS =================
+	{%endcomment%}
+
+	{% assign asset_images = product.metafields.hashcom.atc_bar_image_from_assets %}
+	{% assign asset_images_array = asset_images |split: "," %}
+
+	{% for image in asset_images_array %}
+		<div class="image_item">
+      			<img src="{{image | asset_url }}" alt="{{image|split:"."|first}}" height="30">
+		</div>
+	{% endfor %}
+	
+	
+{% endcapture %}
+
+
+{%comment%}
+=================================================
+Produktbild mit Titel und Untertitel
+=================================================
+{%endcomment%}
+{% capture product_title_with_heading %}
+	{% assign image_and_text_block = section.blocks | where: "type","image_and_text" %}
+	{% assign image_and_text_block = image_and_text_block[0].settings %}
+	
+    {%style%}
+    .title_subtitle_wrapper .title{
+    	color: {{image_and_text_block.title_text_color}};
+    }
+
+	.title_subtitle_wrapper .subtitle{
+    	color: {{image_and_text_block.subtitle_text_color}};
+    }
+    {%endstyle%}
+
+
+	{% if image_and_text_block.show_image %}
+	<div class="product_image">
+      <img src="{{product.featured_image|image_url: width: 50, height: 50}}" alt="{{product.featured_image.alt}}" height="50" width="50">
+	</div>	
+	{% endif %}
+	
+	<div class="title_subtitle_wrapper">
+      {% if product.metafields.hashcom.atc_bar_title.value != blank or image_and_text_block.title != blank %}
+    	<div class="title hidden-phone">
+          {% if product.metafields.hashcom.atc_bar_title.value != blank %}
+          	{{product.metafields.hashcom.atc_bar_title.value |replace: "%produkttitel%",product.title }}
+          {% elsif image_and_text_block.title != blank%}
+            {{image_and_text_block.title |replace: "%produkttitel%",product.title}}
+          {%endif%}
+      	</div>
+      {%endif%}
+      	
+      {% if product.metafields.hashcom.atc_bar_subtitle.value != blank or  image_and_text_block.subtitle != blank %}
+    	<div class="subtitle hidden-pocket">
+          {% if product.metafields.hashcom.atc_bar_subtitle.value != blank %}
+          	{{product.metafields.hashcom.atc_bar_subtitle.value |replace: "%produkttitel%",product.title }}
+          {% elsif image_and_text_block.subtitle != blank%}
+            {{image_and_text_block.subtitle}}
+          {%endif%}
+      	</div>
+      {%endif%}
+	</div>
+{% endcapture %}
+
+
+{%comment%}
+=================================================
+ATC / Scroll to Variants
+=================================================
+{%endcomment%}
+{% capture button %}
+
+{%if product.variants.size > 1 %}
+{%comment%}=====When Product has Variants====={%endcomment%}
+<div    onclick="scrollto(document.querySelector('.ProductForm__Variants'),'smooth')"
+        class="atc_bar_button" {% unless product.available %}disabled="disabled"{% endunless %}>
+              {%- if product.available -%}
+              <span>{{section.settings.atc_text_when_variant}}</span>
+              {%- else -%}
+              {{- 'product.form.sold_out' | t -}}
+              {%- endif -%}
+            </div>
+{%else%}
+{%comment%}=====When Product has no Variant====={%endcomment%}
+<div  
+        class="atc_bar_button" {% if product.available %}onclick="atc();"{% else %}disabled="disabled"{% endif %}>
+              {%- if product.available -%}
+              <span>{% if product.template_suffix == 'pre-order' %}{{ 'product.form.pre_order' | t }}{% else %}{{ 'product.form.add_to_cart' | t }}{% endif %}</span>
+
+              {%- if section.settings.show_price_in_button -%}
+              <span class="Button__SeparatorDot"></span>
+              <span>{{ product.price | money_without_trailing_zeros }}</span>
+              {%- endif -%}
+              {%- else -%}
+              {{- 'product.form.sold_out' | t -}}
+              {%- endif -%}
+            </div>
+{%endif%}
+{% endcapture %}
+
+
+
+
+
+<div id="atc_bar_wrapper" class="atc_bar_wrapper hide">
+  <div class="atc_bar_product_img_with_text_wrapper">
+    {{product_title_with_heading}}
+  </div>
+  <div class="atc_bar_images_wrapper hidden-pocket">
+    {{images}}
+  </div>
+  <div class="trusted_with_text">
+  	{{trusted_with_text}}
+  </div>
+  <div class="atc_or_scroltovariants">
+    {{button}}
+  </div>
+</div>
+
+
+<style>
+@media screen and (max-width: 640px) {
+	.atc_bar_wrapper{
+      flex-direction: row;
+      
+      /*
+		display: grid;
+    width: 100%; 
+    grid-template-columns: fit-content(70px) auto;
+    grid-template-rows: fit-content(20%) auto;
+    grid-template-areas:
+        "image text"
+        "image atc";
+      */
+	}
+/*
+	.atc_bar_product_img_with_text_wrapper{
+	grid-area: image;
+	}
+
+	.trusted_with_text{
+	grid-area: text;
+	}
+
+	.atc_or_scroltovariants{
+	grid-area: atc;
+	}
+  */
+}
+
+.trusted_with_text{
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.trusted_with_text{
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+  
+  
+.atc_bar_button{
+border: 1px solid;
+  border-color:{{section.settings.atc_border_color}};
+    padding: 3px 10px;
+    cursor: pointer;
+  text-align: center;
+  background: {{section.settings.atc_background_color}};
+  color:{{section.settings.atc_text_color}};
+}
+.atc_bar_button:hover{
+border-color: transparent;
+  color: {{section.settings.atc_text_color_hover}};
+  background:{{section.settings.atc_background_color_hover}};
+  border-color: {{section.settings.atc_border_color_hover}};
+  transition: all 0.4s linear;  
+}
+.atc_bar_button[disabled] {
+    color: gray;
+    cursor: not-allowed !important;
+}
+
+
+
+.atc_bar_images_wrapper .image_item{
+display:flex;
+height:30px;
+}
+
+.atc_bar_images_wrapper{
+    display: flex;
+	flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    align-content: center;
+	gap:5px;
+}
+
+.atc_bar_product_img_with_text_wrapper .title_subtitle_wrapper{
+	display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
+.atc_bar_product_img_with_text_wrapper .product_image{
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  mix-blend-mode: darken;
+  min-width: max-content;
+}
+
+.atc_bar_product_img_with_text_wrapper{
+display:flex;
+flex-direction: row;
+align-items: stretch;
+height: 100%;
+gap: 1rem;
+}
+
+
+.atc_bar_wrapper.show{
+visibility: visible !important;
+opacity: 1;
+transition: all 0.4s linear;
+}
+
+.atc_bar_wrapper.hide{
+visibility: hidden !important;
+opacity:0;
+transition: all 0.4s linear;
+
+}
+
+.atc_bar_wrapper{
+	padding: 10px 5px;
+    background: {{section.settings.background_color}};
+	border-top: solid {{section.settings.border_width | default: 0 |append: "px"}} {{section.settings.border_color}};
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9;
+	align-items: center;
+  	display:flex;
+    justify-content: space-around;
+	/*flex-wrap: wrap;*/
+  	gap: 10px;
+}
+</style>
+
+{%endif%}
+
+{% schema %}
+{
+"name": "Add To Cart Bar Bottom",
+  "settings": [
+	{
+    "type": "checkbox",
+    "id": "enable_section",
+    "label": "Section aktivieren"
+    },
+    {
+    "type": "header",
+    "content": "Allgemein"
+    },
+    {
+    "type": "color_background",
+    "id": "background_color",
+    "label": "Hintergrundfarbe"
+    },
+    {
+    "type": "number",
+    "id": "border_width",
+    "label": "Randdicke oben in Pixel"
+    },
+    {
+    "type": "color",
+    "id": "border_color",
+    "label": "Randfarbe oben"
+    },
+    {
+    "type": "header",
+    "content": "ATC Button"
+    },
+    {
+    "type": "checkbox",
+    "id": "show_price_in_button",
+    "label": "Bei Produkten ohne Variante Preis im Button anzeigen"
+    },
+    {
+    "type": "textarea",
+    "id": "atc_text_when_variant",
+    "label": "Text, wenn Produkt mit Varianten"
+    },
+	{
+    "type": "color",
+    "id": "atc_background_color",
+    "label": "Hintergrundfarbe"
+    },
+	{
+    "type": "color",
+    "id": "atc_text_color",
+    "label": "Textfarbe"
+    },
+	{
+    "type": "color",
+    "id": "atc_border_color",
+    "label": "Umrandung"
+    },
+	{
+    "type": "color",
+    "id": "atc_background_color_hover",
+    "label": "Hover Hintergrundfarbe"
+    },
+	{
+    "type": "color",
+    "id": "atc_text_color_hover",
+    "label": "Hover Textfarbe"
+    },
+	{
+    "type": "color",
+    "id": "atc_border_color_hover",
+    "label": "Hover Umrandung"
+    }
+  ],
+ "blocks": [
+        {
+        "type": "image_and_text",
+		"limit": 1,
+        "name": "Produktbild mit Text",
+        "settings": [
+              {
+              "type": "header",
+              "content": "Produktbild"
+              },
+              {
+              "type": "checkbox",
+              "id": "show_image",
+              "label": "Produktbild anzeigen",
+              "default": true
+              },
+              {
+              "type": "header",
+              "content": "Titel"
+              },
+              {
+              "type": "textarea",
+              "id": "title",
+              "label": "Standard Titel",
+              "info": "Produktspezifisch: Metafield(namespace:hashcom, key: atc_bar_title) Variablen: %produkttitel%"
+              },
+              {
+              "type": "color",
+              "id": "title_text_color",
+              "label": "Titel Textfarbe"
+              },
+              {
+              "type": "header",
+              "content": "Untertitel"
+              },
+              {
+              "type": "textarea",
+              "id": "subtitle",
+              "label": "Standard Untertitel",
+              "info": "Produktspezifisch: Metafield(namespace:hashcom, key: atc_bar_subtitle)"
+              },
+              {
+              "type": "color",
+              "id": "subtitle_text_color",
+              "label": "Untertitel Textfarbe"
+              }
+              ]
+		},
+        {
+        "type": "image",
+        "name": "Bild",
+        "settings": [
+            {
+            "type": "radio",
+            "id": "image_src",
+            "label": "Bild Laden über",
+            "options": [
+            {
+            "value": "file",
+            "label": "Dateien (normal)"
+            },
+            {
+            "value": "asset",
+            "label": "Assets Ordner"
+            }
+            ],
+            "default": "file",
+            "info":"Diese Auswahl hat nur Auswirkung darauf, wie das Bild aus diesem Block geladen werden soll. Produktspezifische Bilder über Metafields wie unten erklärt werden hiervon nicht beeinflusst."
+            },
+            {
+            "type": "header",
+            "content": "Dateien (normal)"
+            },
+            {
+              "type": "image_picker",
+              "id": "file_img",
+              "label": "Bild"
+            },
+            {
+            "type": "paragraph",
+            "content": "Produktspezifische Bilder aus Files laden:"
+            },
+            {
+            "type": "paragraph",
+            "content": "Metafields(type:multiline text, namespace:hashcom, key: atc_bar_image_from_files). Als Wert den Namen des Bildes inklusive der Dataeiendung angeben."
+            },
+            {
+            "type": "paragraph",
+            "content": "Mehrere Bilder können geladen werden, wenn diese mit Komma separiert werden. z.B: 'bild1.jpg,bild2.png' "
+            },
+            {
+            "type": "header",
+            "content": "Assets Ordner"
+            },
+            {
+              "type": "text",
+              "id": "asset_img",
+              "label": "Bild",
+              "info":"Mit Dateiendung, z.B 'bild1.svg'"
+            },
+            {
+            "type": "paragraph",
+            "content": "Produktspezifische Bilder aus Assets laden:"
+            },
+            {
+            "type": "paragraph",
+            "content": "Metafields(type:multiline text, namespace:hashcom, key: atc_bar_image_from_assets). Als Wert den Namen des Bildes inklusive der Dataeiendung angeben."
+            },
+            {
+            "type": "paragraph",
+            "content": "Mehrere Bilder können geladen werden, wenn diese mit Komma separiert werden. z.B: 'bild1.jpg,bild2.png' "
+            }
+        ]
+        },
+		{
+        "type": "trusted_shop",
+        "name": "Trusted Shop mit Text",
+		"limit": 1,
+        "settings": [
+            {
+				"type": "checkbox",
+                "id": "enable_trustedshops",
+                "label": "Aktiviere Trusted Shops Widget",
+				"default": true
+            },
+		{
+              "type": "textarea",
+              "id": "text",
+              "label": "Text",
+              "info": "Produktspezifisch: Metafield(namespace:hashcom, key: atc_bar_text_under_trustedshops)"
+              },
+              {
+              "type": "color",
+              "id": "text_color",
+              "label": "Textfarbe"
+              }
+        ]
+    }
+  ]
+
+}
+{% endschema %}
+
+
+{% if section.settings.enable_section %}
+
+<script>
+  var atc_bar_loaded = false;
+  $(window).scroll(function () {
+    	if(!atc_bar_loaded){
+          check_atc_bar_visibility()
+        }
+        });
+  
+  $(document).ready(function () {
+    	if(!atc_bar_loaded){
+          check_atc_bar_visibility()
+        }
+        });
+  
+  function check_atc_bar_visibility(){
+  
+      		var header = $('#shopify-section-header');
+      		var footer = $("#shopify-section-footer");
+            var atc_button = $(`form[action^="/cart/add"]`).find(`[data-action="add-to-cart"]`);
+            var atc_bar = $('#atc_bar_wrapper')[0];
+      		// If window+header scrolled down more than the buttons absolute height AND if bottom not greater than footers height
+            if (($(window).scrollTop() + header.height())  > (atc_button.offset().top + atc_button.parent().height()) && ($(window).scrollTop() + $(window).height()) < footer.offset().top   )
+            {
+              atc_bar_show(atc_bar);
+              
+            }else{
+              atc_bar_hide(atc_bar);
+            }
+
+  }
+  
+  function atc_bar_show(atc_bar){
+  	if(!atc_bar.classList.contains("show")){
+      atc_bar.classList.remove("hide");
+      atc_bar.classList.add("show");
+    }
+  }
+  
+  function atc_bar_hide(atc_bar){
+    if(!atc_bar.classList.contains("hide")){
+      atc_bar.classList.remove("show");
+      atc_bar.classList.add("hide");
+    }
+  }
+  
+  function atc(){
+  	var atc_button = $(`form[action="/cart/add"]`).find(`[data-action="add-to-cart"]`);
+    atc_button.click();
+  }
+  
+  
+</script>
+
+{%endif%}

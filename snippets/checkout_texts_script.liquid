@@ -1,0 +1,258 @@
+<style>
+  .HOF-17 .sidebar__content .order-summary__sections {
+  height: auto;
+}
+.HOF-17 .hide {
+  opacity: 0;
+  z-index: -10;
+  position: absolute;
+}
+  .HOF-17 .sidebar {
+  padding-bottom: 4em !important;
+}
+@media only screen and (max-width: 1000px) {
+  .HOF-17 .HOF-17_container {
+    display: none;
+  }
+.HOF-17 .sidebar {
+  padding-bottom: 0px !important;
+}
+}
+.HOF-17 .HOF-17_container {
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+  padding-top: 8px;
+}
+.HOF-17 .HOF-17_container .HOF-17_heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 32px;
+}
+.HOF-17 .HOF-17_container .HOF-17_heading div {
+  padding: 0 8px;
+  white-space: nowrap;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  color: #52514e;
+}
+.HOF-17 .HOF-17_container .HOF-17_heading::before {
+  content: '';
+  height: 1px;
+  width: 100%;
+  background: #e0ddd5;
+  flex-grow: 1;
+}
+.HOF-17 .HOF-17_container .HOF-17_heading::after {
+  content: '';
+  height: 1px;
+  width: 100%;
+  background: #e0ddd5;
+  flex-grow: 1;
+}
+.HOF-17 .HOF-17_container .HOF-17_usp:not(:last-child) {
+  padding-bottom: 36px;
+}
+.HOF-17 .HOF-17_container .HOF-17_usp-text--section {
+  padding-top: 16px;
+  position: relative;
+}
+.HOF-17 .HOF-17_container .HOF-17_usp-text--section .HOF-17_usp-text-show-more {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+.HOF-17 .HOF-17_container .HOF-17_usp-text--section .HOF-17_usp-text-show-more .show-more-txt {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13.9px;
+  color: #001624;
+}
+.HOF-17 .HOF-17_container .HOF-17_usp-text--section .HOF-17_usp-text-show-more .show-more {
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 12px;
+  -webkit-text-decoration-line: underline;
+  text-decoration-line: underline;
+  color: #52514e;
+  cursor: pointer;
+  z-index: 10;
+}
+.HOF-17 .HOF-17_container .HOF-17_usp-text--section .HOF-17_usp-text-full {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13.9px;
+  color: #001624;
+  display: flex;
+  flex-direction: column;
+}
+.HOF-17 .HOF-17_container .HOF-17_usp-text--section .HOF-17_usp-text-full span {
+  font-weight: 600;
+}
+.HOF-17 .HOF-17_container .HOF-17_usp-text--section .show-less {
+  display: flex;
+  flex-direction: row-reverse;
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 12px;
+  -webkit-text-decoration-line: underline;
+  text-decoration-line: underline;
+  color: #52514e;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.HOF-17 .HOF-17_container .HOF-17_usp-text--section .details {
+  max-height: 18.2px;
+  transition: all 0.5s;
+  overflow: hidden;
+}
+.HOF-17 .HOF-17_container .HOF-17_usp-text--section.expanded .details {
+  max-height: 9vw;
+}
+.HOF-17 .HOF-17_container .HOF-17_usp-text--section.expanded .show-less {
+  opacity: 1;
+}
+.HOF-17 .HOF-17_container .HOF-17_usp-text--section.expanded .HOF-17_usp-text-show-more {
+  opacity: 0;
+}
+.HOF-17 .HOF-17_container .HOF-17_usp-list {
+  display: flex;
+  flex-direction: column;
+}
+.HOF-17 .HOF-17_container .HOF-17_usp-list .HOF-17_usp-title--section {
+  display: flex;
+  align-items: center;
+}
+.HOF-17 .HOF-17_container .HOF-17_usp-list .HOF-17_usp-title--section .HOF-17_usp-icon {
+  width: 38px;
+  display: flex;
+  justify-content: center;
+}
+.HOF-17 .HOF-17_container .HOF-17_usp-list .HOF-17_usp-title--section .HOF-17_usp-title {
+  font-weight: 400;
+  font-size: 15px;
+  color: #001624;
+  padding-left: 4px;
+}
+.HOF-17 .HOF-17_container .HOF-17_usp-list [data-usp='1'] img {
+  width: 24.32px;
+}
+.HOF-17 .HOF-17_container .HOF-17_usp-list [data-usp='2'] img {
+  width: 27px;
+}
+.HOF-17 .HOF-17_container .HOF-17_usp-list [data-usp='3'] img {
+  width: 23.72px;
+}
+</style>
+
+<script>
+  const $ = (s, o) => (o ? s.querySelector(o) : document.querySelector(s));
+const insert = (target, position, element) => {
+  if (typeof element === 'string') {
+    target.insertAdjacentHTML(position, element);
+  } else {
+    target.insertAdjacentElement(position, element);
+  }
+};
+const hof17 = {
+  mainJS: () => {
+    const hof17container = `<div class="HOF-17_container">
+      <div class="HOF-17_heading">
+        <div>Was zeichnet unsere Premium-Produkte aus?</div>
+      </div>
+      <div class="HOF-17_usp-list">
+        <div class="HOF-17_usp" data-usp="1">
+          <div class="HOF-17_usp-title--section">
+            <div class="HOF-17_usp-icon">
+              <img src="${hof17.svg1()}"/>
+            </div>
+            <div class="HOF-17_usp-title">
+              <div>${hof17.usp().uspTtl[0]}</div>
+            </div>
+          </div>
+          <div class="HOF-17_usp-text--section">
+            <div class="HOF-17_usp-text-show-more"><div class="show-more-txt">${hof17.usp().uspPrv[0]}</div><div class="show-more">mehr anzeigen</div></div>
+            <div class="HOF-17_usp-text-full hide"><div class="details">${hof17.usp().uspTxt[0]}</div><div class="show-less">weniger anzeigen</div></div>
+          </div>
+        </div>
+        <div class="HOF-17_usp" data-usp="2">
+          <div class="HOF-17_usp-title--section">
+            <div class="HOF-17_usp-icon">
+              <img src="${hof17.svg2()}"/>
+            </div>
+            <div class="HOF-17_usp-title">
+              <div>${hof17.usp().uspTtl[1]}</div>
+            </div>
+          </div>
+          <div class="HOF-17_usp-text--section">
+            <div class="HOF-17_usp-text-show-more"><div class="show-more-txt">${hof17.usp().uspPrv[1]}</div><div class="show-more">mehr anzeigen</div></div>
+            <div class="HOF-17_usp-text-full hide"><div class="details">${hof17.usp().uspTxt[1]}</div><div class="show-less">weniger anzeigen</div></div>
+          </div>
+        </div>
+        <div class="HOF-17_usp" data-usp="3">
+          <div class="HOF-17_usp-title--section">
+            <div class="HOF-17_usp-icon">
+              <img src="${hof17.svg3()}"/>
+            </div>
+            <div class="HOF-17_usp-title">
+              <div>${hof17.usp().uspTtl[2]}</div>
+            </div>
+          </div>
+          <div class="HOF-17_usp-text--section">
+            <div class="HOF-17_usp-text-show-more"><div class="show-more-txt">${hof17.usp().uspPrv[2]}</div><div class="show-more">mehr anzeigen</div></div>
+            <div class="HOF-17_usp-text-full hide"><div class="details">${hof17.usp().uspTxt[2]}</div><div class="show-less">weniger anzeigen</div></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+    if (!$('HOF-17_container')) insert($('.sidebar__content'), 'afterend', hof17container);
+    hof17.listner();
+  },
+  usp: () => {
+    const data = {
+      uspTtl: ['Kochgeschirr für die Ewigkeit', 'Lebenslange Garantie auf den Guss', 'Nachhaltige Wiederbeschichtung'],
+      uspPrv: ['Mit Hoffmann setzen Sie der Geldverschwendung ein...', 'Sie müssen sich nie wieder über einen gewölbten...', 'Sollten nach vielen Jahren der intensiven Nutzung die...'],
+      uspTxt: ['Mit Hoffmann setzen Sie der Geldverschwendung ein Ende. Kochgeschirr entsorgen gehört für Sie ab sofort der Vergangenheit an. Verlassen Sie sich bei Ihrer Investition auf das bewährte Herstellungsverfahren - <span>100% Made in Germany</span>.', 'Sie müssen sich nie wieder über einen gewölbten Boden und wackelnde Pfannen auf Ihrem Herd ärgern. Denn wir versichern Ihnen, dass sich der <span>bewährte Handguss</span> auch unter hohen Einsatztemperaturen <span>nicht verformen</span> wird.', 'Sollten nach vielen Jahren der intensiven Nutzung die Antihafteigenschaften nachlassen, <span>erneuern wir die Beschichtung</span> gegen eine <span>preiswerte Service-Pauschale</span>. Wenn Sie Ihr geschätztes Kochgeschirr zurückerhalten, ist es <span>wie neu</span>.'],
+    };
+
+    return data;
+  },
+  svg1: () => 'https://assets.ablyft.com/60091050/YkVPnCCjKN1gJPQmiHXaYEeKXq89MKRQfpXJdjyQ.svg',
+  svg2: () => 'https://assets.ablyft.com/60091050/ZnzewZQQBJlTCaIathZRrP0EOqUQLYovsmfkaliH.svg',
+  svg3: () => 'https://assets.ablyft.com/60091050/KnwHuCHZj95XdRKnbRkS2hThievLa5etrGuNJdF9.svg',
+  listner: () => {
+    $('body').onclick = (e) => {
+      if (e.target.closest('.show-more') || e.target.classList.contains('show-more')) {
+        const parent = e.target.closest('.HOF-17_usp-text--section');
+        parent.classList.add('expanded');
+        $(parent, '.HOF-17_usp-text-show-more').classList.add('hide');
+        $(parent, '.HOF-17_usp-text-full').classList.remove('hide');
+      } else if (e.target.closest('.show-less') || e.target.classList.contains('show-less')) {
+        const parent = e.target.closest('.HOF-17_usp-text--section');
+        parent.classList.remove('expanded');
+        setTimeout(() => {
+          $(parent, '.HOF-17_usp-text-show-more').classList.remove('hide');
+          $(parent, '.HOF-17_usp-text-full').classList.add('hide');
+        }, 450);
+      }
+    };
+  },
+};
+(function pollForhof17() {
+  if ($('[role="complementary"] .sidebar__content')) {
+    try {
+      hof17.mainJS();
+      $('body').classList.add('HOF-17');
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    setTimeout(pollForhof17, 25);
+  }
+}());
+</script>

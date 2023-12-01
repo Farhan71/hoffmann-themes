@@ -1,0 +1,101 @@
+{%if selected_variant != nil %}
+<div class="product_price_wrapper">
+{%- if product.template_suffix != 'coming-soon' -%}
+<div class="product_price_flex">
+    <div class="ProductMeta__PriceList Heading">
+      {%- if selected_variant.compare_at_price > selected_variant.price -%}
+        <span class="ProductMeta__Price Price Price--highlight Text--subdued u-h4">{{ selected_variant.price | money_without_trailing_zeros }}</span>
+        <span class="ProductMeta__Price Price Price--compareAt Text--subdued u-h4">{{ selected_variant.compare_at_price | money_without_trailing_zeros }}</span>
+      {%- else -%}
+        <span class="ProductMeta__Price Price Text--subdued u-h4">{{ selected_variant.price | money_without_trailing_zeros }}</span>
+      {%- endif -%}
+    </div>
+    
+    <div class="product_tax_info">
+        {%- if block.settings.show_taxes_included -%}
+            {%- if shop.taxes_included or shop.shipping_policy.body != blank -%}
+                {%- if shop.taxes_included -%}
+                <span class="ProductMeta__TaxNotice Rte">
+                    {{ 'product.general.include_taxes' | t }}
+                </span>
+                {%- endif -%}
+            {%- endif -%}
+        {%- endif -%}
+    </div>
+
+    <div class="ProductMeta__UnitPriceMeasurement" style="display: {%- if selected_variant.unit_price_measurement -%}block{% else %}none{% endif %}">
+        <div class="UnitPriceMeasurement Heading u-h6 Text--subdued">
+          (<span class="UnitPriceMeasurement__Price">{{ selected_variant.unit_price | money_without_trailing_zeros }}</span>
+          <span class="UnitPriceMeasurement__Separator">/ </span>
+          <span class="UnitPriceMeasurement__ReferenceValue" style="display: {% if selected_variant.unit_price_measurement.reference_value != 1 %}inline{% else %}none{% endif %}">{{ selected_variant.unit_price_measurement.reference_value }}</span>
+          <span class="UnitPriceMeasurement__ReferenceUnit">{{ selected_variant.unit_price_measurement.reference_unit }}</span>)
+        </div>
+      </div>
+
+    </div>
+
+  {%- endif -%}
+
+{%else%}
+<div class="product_price_wrapper">
+{%- if product.template_suffix != 'coming-soon' -%}
+<div class="product_price_flex">
+    <div class="ProductMeta__PriceList Heading">
+      {%- if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price -%}
+        <span class="ProductMeta__Price Price Price--highlight Text--subdued u-h4">{{ product.selected_or_first_available_variant.price | money_without_trailing_zeros }}</span>
+        <span class="ProductMeta__Price Price Price--compareAt Text--subdued u-h4">{{ product.selected_or_first_available_variant.compare_at_price | money_without_trailing_zeros }}</span>
+      {%- else -%}
+        <span class="ProductMeta__Price Price Text--subdued u-h4">{{ product.selected_or_first_available_variant.price | money_without_trailing_zeros }}</span>
+      {%- endif -%}
+    </div>
+    
+    <div class="product_tax_info">
+        {%- if block.settings.show_taxes_included -%}
+            {%- if shop.taxes_included or shop.shipping_policy.body != blank -%}
+                {%- if shop.taxes_included -%}
+                <span class="ProductMeta__TaxNotice Rte">
+                    {{ 'product.general.include_taxes' | t }}
+                </span>
+                {%- endif -%}
+            {%- endif -%}
+        {%- endif -%}
+    </div>
+
+    <div class="ProductMeta__UnitPriceMeasurement" style="display: {%- if product.selected_or_first_available_variant.unit_price_measurement -%}block{% else %}none{% endif %}">
+        <div class="UnitPriceMeasurement Heading u-h6 Text--subdued">
+          (<span class="UnitPriceMeasurement__Price">{{ product.selected_or_first_available_variant.unit_price | money_without_trailing_zeros }}</span>
+          <span class="UnitPriceMeasurement__Separator">/ </span>
+          <span class="UnitPriceMeasurement__ReferenceValue" style="display: {% if product.selected_or_first_available_variant.unit_price_measurement.reference_value != 1 %}inline{% else %}none{% endif %}">{{ product.selected_or_first_available_variant.unit_price_measurement.reference_value }}</span>
+          <span class="UnitPriceMeasurement__ReferenceUnit">{{ product.selected_or_first_available_variant.unit_price_measurement.reference_unit }}</span>)
+        </div>
+      </div>
+
+    </div>
+
+  {%- endif -%}
+ {%endif%}
+
+
+        {%- if shop.shipping_policy.body != blank -%}
+        <p style="color: {{block.settings.shipping_text_color}};{%if block.settings.shipping_text_bold %}font-weight:bold;{%endif%}">
+          {{ 'product.general.shipping_policy_html' | t}}
+        </p>
+        {%- endif -%}
+</div>
+
+<style>
+    .product_price_flex{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .product_tax_info{
+        margin-left: 5px;
+    }
+    .product_price_wrapper{
+        display: flex;
+        flex-direction: column;
+        margin-left: 17px;
+    }
+</style>

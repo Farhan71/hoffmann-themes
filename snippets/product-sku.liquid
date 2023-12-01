@@ -1,0 +1,3 @@
+<div class="ProductMeta__Sku Heading Text--subdued u-h6">{{ 'product.form.sku' | t }}: 
+    <span class="ProductMeta__SkuNumber">{% if selected_variant != nil %}{{selected_variant.sku}}{%else%}{{product.selected_or_first_available_variant.sku }}{%endif%}</span>
+</div>

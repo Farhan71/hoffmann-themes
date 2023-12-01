@@ -1,0 +1,292 @@
+{%- capture trennlinie -%}
+{% if section.settings.separator_type != "none" %}
+{% render 'separators', type: section.settings.separator_type %}
+{%endif%}
+{%- endcapture -%}
+
+  {% assign switch_size = section.settings.mobile_to_desktop_switch_pixel |default:750 %}
+<style>
+  .video-width {
+    max-width: 100%;
+       height: auto;
+  }
+
+  .video-wrapper-hashcom .bulletpoints-title-wrapper{
+    padding: 15px;
+    text-align: center;
+  }
+
+  .video-wrapper-hashcom{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: {{- section.settings.video_alignment -}};;
+    margin-top: {{- section.settings.margin-top |default: 0 |append: "px" -}};
+    margin-bottom: {{- section.settings.margin-bottom |default: 0 |append: "px" -}};
+  }
+
+@media screen and (max-width: {{ switch_size |append:"px"}}){
+    .videobanner-{{ section.id | md5 }}.video_desktop{
+        display:none !important;
+    }
+    .video-width {
+    width: {{section.settings.video_width_desktop | append: "%"}};
+  }
+    
+}
+
+@media screen and (min-width: {{switch_size  |plus:1 |append:"px"}}){
+    .videobanner-{{ section.id | md5 }}.video_mobile{
+        display:none !important;
+    }
+  .video-width {
+    width: {{section.settings.video_width_mobile | append: "%"}};
+  }
+}
+</style>
+
+
+  {%- if section.settings.video_desktop != blank -%}
+    {% assign video_source = section.settings.video_desktop.sources.last %}
+      {%-liquid
+        assign video_height = video_source.height
+      -%}
+      {% capture classes %}videobanner-{{ section.id | md5 }} video_desktop{% endcapture %}
+      {% render "hashcom-video",
+        heading: section.settings.heading,
+        subheading: section.settings.subheading,
+        trennlinie: trennlinie,
+        class: classes,
+        alt: section.settings.video_desktop.alt | escape,
+        loop: section.settings.loop,
+        controls: section.settings.controls,
+        audio_active: section.settings.audio_active,
+        audio_onstart_vol: section.settings.audio_onstart_vol,
+        autoplay: section.settings.autoplay,
+        url: video_source.url,
+        thumbnail: section.settings.thumbnail_desktop
+      %}
+    
+  {%- endif -%}
+
+  {%- if section.settings.video_mobile != blank -%}
+    {% assign video_source = section.settings.video_mobile.sources.last %}
+      {%-liquid
+        assign video_height = video_source.height
+      -%}
+      {% capture classes %}videobanner-{{ section.id | md5 }} video_mobile{% endcapture %}
+    {% comment %}
+        width: video_source.width,
+        height: video_source.height,
+    {% endcomment %}
+      {% render "hashcom-video",
+        heading: section.settings.heading,
+        subheading: section.settings.subheading,
+        trennlinie: trennlinie,
+        class: classes,
+        alt: section.settings.video_mobile.alt | escape,
+        loop: section.settings.loop,
+        controls: section.settings.controls,
+        audio_active: section.settings.audio_active,
+        audio_onstart_vol: section.settings.audio_onstart_vol,
+        autoplay: section.settings.autoplay,
+        url: video_source.url,
+        thumbnail: section.settings.thumbnail_mobile
+      %}
+  {%- endif -%}
+
+<script>
+    function start(elem,vol, muteBool) {
+      elem.muted = !muteBool;
+      elem.volume=vol;
+    
+      if(window.innerWidth <=768) {
+        elem.muted = true;
+      }
+    }
+  
+    if(window.innerWidth > {{switch_size}}){
+        var video = document.querySelector(".videobanner-{{ section.id | md5 }}.video_desktop video");
+    }else{
+        var video = document.querySelector(".videobanner-{{ section.id | md5 }}.video_mobile video");
+    }
+  
+    var videosrc = video.getAttribute("mysrc");
+    video.setAttribute("src",videosrc);
+  </script>
+
+{% schema %}
+{
+  "name": "Video-Banner",
+  "tag": "section",
+  "class": "section no_line-height",
+  "settings": [
+    {
+  "type": "select",
+  "id": "separator_type",
+  "label": "Art der Trennline",
+  "options": [
+    {
+    "value": "dots",
+    "label": "Dots"
+    },
+    {
+    "value": "line",
+    "label": "Linie"
+    },
+    {
+    "value": "none",
+    "label": "Keine"
+    }
+  ],
+  "default": "line",
+  "info": "Einstellungen für die Trennlinien unter Theme-Einstellungen --> HASH-COM Trennlinien möglich."
+  },
+  {
+	"type":      "text",
+    "id":        "heading",
+    "label":     "Überschriftstext",
+    "default":   "Überschrift"
+    },
+    {
+	"type":      "text",
+    "id":        "subheading",
+    "label":     "Unterüberschriftstext",
+    "default":   "Unterüberschrift"
+    },
+    {
+          "type": "header",
+          "content": "Desktop"
+    },
+    {
+      "type": "video",
+      "id": "video_desktop",
+      "label": "Video"
+    },
+    {
+      "type": "range",
+      "id": "video_width_desktop",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "default": 100,
+      "label": "Video-Breite"
+    },
+    {
+        "type": "image_picker",
+        "id": "thumbnail_desktop",
+        "label": "Thumbnail"
+    },
+    {
+          "type": "header",
+          "content": "Mobil"
+    },
+    {
+      "type": "video",
+      "id": "video_mobile",
+      "label": "Video"
+    },
+    {
+      "type": "range",
+      "id": "video_width_mobile",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "default": 100,
+      "label": "Video-Breite"
+    },
+    {
+      "type": "number",
+      "id": "mobile_to_desktop_switch_pixels",
+      "label": "Wechsle von Mobil zu Desktop Video ab: Seitenbreite in (px)",
+      "default": 750,
+      "info": "Standard: 750"
+    },
+    {
+        "type": "image_picker",
+        "id": "thumbnail_mobile",
+        "label": "Thumbnail"
+    },
+        {
+          "type": "checkbox",
+          "id": "loop",
+          "label": "Video Loop",
+          "info": "Video automatisch wiederholen",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "controls",
+          "label": "Video-Kontrollen anzeigen",
+          "info": "Videokontollen (Play/Pause, Audiokontrollen etc) einblenden",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "audio_active",
+          "label": "Video Ton aktivieren",
+          "info": "Video Ton auf Desktop aktivieren. (mobil wird immer stumm gestellt)",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "audio_onstart_vol",
+          "min": 0.1,
+          "max": 1,
+          "step": 0.1,
+          "default": 0.5,
+          "label": "Startlautstärke",
+          "info": "Lautstärke, die das Video beim Laden der Seite hat (0.1 = 10%, 1 = 100%)"
+        },
+        {
+          "type": "checkbox",
+          "id": "autoplay",
+          "label": "Video Autoplay",
+          "info": "Video automatisch beim laden der Seite starten",
+          "default": true
+        },
+        {
+          "type": "paragraph",
+          "content": "WICHTIG: Wir raten davon ab, den Autoplay zu aktivieren, wenn 'Video-Kontrollen' deaktiviert ist. Der Kunde kann das Video sonst nicht stoppen!"
+        },
+    {
+      "type": "select",
+      "id": "video_alignment",
+      "options": [
+        {
+          "value": "center",
+          "label": "Mitte"
+        },
+        {
+          "value": "flex-start",
+          "label": "Links"
+        },
+        {
+          "value": "flex-end",
+          "label": "Rechts"
+        }
+      ],
+      "default": "center",
+      "label": "Mittel",
+      "info": "Videoausrichtung"
+    },
+    {
+      "type": "number",
+      "id": "margin-top",
+      "label": "Abstand oben",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "margin-bottom",
+      "label": "Abstand unten",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video-Section"
+    }
+  ]
+}
+{% endschema %}

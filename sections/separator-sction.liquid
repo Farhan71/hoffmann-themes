@@ -1,0 +1,30 @@
+  <div style="width:100; height:{{ section.settings.height }}px;">
+  
+</div>
+
+{% schema %}
+{
+"name": "Abstand",
+  "settings": [
+    {
+    "type": "number",
+    "id": "height",
+    "label": "Höhe des Abstands [px]",
+    "default":0
+    }
+  ],
+  "presets": [
+    {
+      "category": "Advanced",
+      "name": "Abstand",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

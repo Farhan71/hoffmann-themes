@@ -1,0 +1,293 @@
+{{'slick.css' | asset_url | stylesheet_tag }}
+{{'slick-theme.css' | asset_url | stylesheet_tag }}
+{{'slick.min.js' | asset_url | script_tag }}
+
+<div class="section hoffmann-badges text-center">
+    <div class="container">
+      <div class="hoffman-badges-title">
+        {% if section.settings.subtitle != blank %} <p class="text-center subtitles">{{section.settings.subtitle}}</p>{% endif %}
+        {% if section.settings.title != blank %} <h2 class="text-center title">{{section.settings.title}}</h2>{% endif %}
+      </div>
+      <div class="hoffman-badges-carousel badges-loaded">
+        <div class="hoffman-stage-outer">
+          <div class="badges-stage">
+            {% for block in section.blocks %}
+            <div class="hoffman-badges-item">
+              <div class="badges-item ">
+                <div class="item-title">
+                  {% if block.settings.title != blank %} <h3>{{block.settings.title}}</h3>{% endif %}
+                </div>
+                <div class="text-center item-image">
+                  {% if block.settings.storyimg != blank %}<img height="110px" width="110px" src="{{block.settings.storyimg | img_url:'270x270'}}" loading="lazy">{% endif %}
+                </div>
+                <div class="item-subdescription text-center">
+                  {% if block.settings.subtitle != blank %}<p>{{block.settings.subtitle}}</p>{% endif %}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    div.hoffmann-badges {
+	 background: #fafafa;
+	 position: relative;
+	 padding: 80px 0;
+	 margin: 0;
+	 text-align: center;
+	 overflow: hidden;
+}
+ div.hoffmann-badges .container {
+	 padding-top: 0;
+	 padding-bottom: 0;
+	 padding: 0 15px;
+}
+ div.hoffmann-badges .container .hoffman-badges-title {
+	 margin-bottom: 60px;
+}
+ div.hoffmann-badges .container .hoffman-badges-title p.subtitles {
+	 font-size: 13px;
+	 line-height: 15px;
+	 letter-spacing: 0.1em;
+	 margin-bottom: 0;
+}
+ div.hoffmann-badges .container .hoffman-badges-title h2.title {
+	 color: #1c1c1c;
+	 font-size: 22px;
+	 line-height: 29px;
+	 letter-spacing: 0.05em;
+	 font-weight: bold;
+	 margin-top: 16px;
+}
+ div.hoffmann-badges .container .hoffman-badges-carousel .badges-stage {
+	 display: flex;
+	 justify-content: center;
+}
+ div.hoffmann-badges .container .hoffman-badges-carousel .badges-stage .hoffman-badges-item {
+	 margin: 0 32px;
+	 width: auto;
+}
+ div.hoffmann-badges .container .hoffman-badges-carousel .badges-stage .hoffman-badges-item .badges-item {
+	 max-width: 250px;
+	 margin: 0 auto;
+	 padding: 16px 24px;
+	 box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+	 text-align: center;
+}
+ div.hoffmann-badges .container .hoffman-badges-carousel .badges-stage .hoffman-badges-item .badges-item .item-title h3 {
+	 margin-bottom: 8px;
+	 font-size: 16px;
+	 font-weight: bold;
+	 letter-spacing: 0.1em;
+	 line-height: 1.618;
+}
+ div.hoffmann-badges .container .hoffman-badges-carousel .badges-stage .hoffman-badges-item .badges-item .item-image img {
+	 max-width: 110px;
+	 width: 100%;
+	 height: 110px;
+	 object-fit: contain;
+}
+ div.hoffmann-badges .container .hoffman-badges-carousel .badges-stage .hoffman-badges-item .badges-item .item-subdescription p {
+	 line-height: 1.618;
+	 font-size: 14px;
+}
+/* testimonials */
+ .myslider .Section--spacingNormal .TestimonialList .Container .Testimonial__Content {
+	 font-size: 26px;
+	 font-weight: lighter;
+	 color: #e30613;
+	 text-align: center;
+	 max-width: 700px;
+	 margin-bottom: 10px;
+	 display: inline-block;
+}
+ .myslider .Section--spacingNormal .TestimonialList .Container .reviewer-info {
+	 margin-top: 20px;
+	 display: flex;
+	 align-items: center;
+	 justify-content: center;
+}
+ .myslider .Section--spacingNormal .TestimonialList .Container .reviewer-info .reviewer-img img {
+	 max-width: 100px;
+	 width: 100%;
+	 height: 100px;
+	 object-fit: contain;
+}
+ .myslider .Section--spacingNormal .TestimonialList .Container .reviewer-info .reviewer-details {
+	 margin-left: 20px;
+	 text-align: left;
+}
+ .myslider .Section--spacingNormal .TestimonialList .Container .reviewer-info .reviewer-details h5.title {
+	 font-weight: bold;
+	 font-size: 14px;
+	 margin: 10px 0;
+	 line-height: 1.1;
+	 color: #222;
+}
+ .myslider .Section--spacingNormal .TestimonialList .Container .reviewer-info .reviewer-details h6.subtitles {
+	 margin-bottom: 0;
+	 font-size: 12px;
+	 margin-top: 10px;
+	 font-weight: 500;
+	 line-height: 1.1;
+	 color: #222;
+}
+ .myslider .Section--spacingNormal .TestimonialList .Container .reviewer-info .reviewer-details a.linktext {
+	 text-decoration: underline;
+	 color: #222;
+	 font-size: 14px;
+	 line-height: 1.42857143;
+}
+ .dm-free-item-text {
+	 padding: 5px 30px;
+	 color: #454545;
+}
+ .dm-pointer-none {
+	 opacity: 0;
+	 pointer-events: none;
+}
+/* Responsive */
+ @media only screen and (max-width: 850px) {
+	 div.hoffmann-badges {
+		 padding: 60px 0;
+	}
+	 div.hoffmann-badges .container .hoffman-badges-title {
+		 margin-bottom: 45px;
+	}
+	 div.hoffmann-badges .container .hoffman-badges-carousel .badges-stage .hoffman-badges-item {
+		 margin: 0 15px;
+	}
+	 div.hoffmann-badges .container .hoffman-badges-carousel .badges-stage .hoffman-badges-item .badges-item .item-title h3 {
+		 line-height: 1;
+	}
+}
+ @media only screen and (max-width: 798px) {
+	 div.hoffmann-badges {
+		 padding: 50px 0;
+	}
+	 div.hoffmann-badges .container .hoffman-badges-title {
+		 margin-bottom: 35px;
+	}
+	 div.hoffmann-badges .container .hoffman-badges-carousel .badges-stage .hoffman-badges-item {
+		 margin: 0 10px;
+	}
+	 div.hoffmann-badges .container .hoffman-badges-carousel .badges-stage .hoffman-badges-item .badges-item {
+		 padding: 10px;
+	}
+	 div.hoffmann-badges .container .hoffman-badges-carousel .badges-stage .hoffman-badges-item .badges-item .item-title h3 {
+		 line-height: 1;
+		 font-size: 15px;
+	}
+	 div.hoffmann-badges .container .hoffman-badges-carousel .badges-stage .hoffman-badges-item .badges-item .item-image img {
+		 max-width: 100px;
+		 height: 100px;
+		 margin: 0 auto;
+	}
+	 div.hoffmann-badges .container .hoffman-badges-carousel .badges-stage .hoffman-badges-item .badges-item .item-subdescription p {
+		 line-height: 1.5;
+	}
+}
+ @media only screen and (max-width: 640px) {
+	 div.hoffmann-badges .container .hoffman-badges-carousel .badges-stage .slick-list {
+		 padding-bottom: 20px !important;
+		 padding-top: 20px !important;
+	}
+	 .drip-payment-badge ul.Footer__PaymentList.HorizontalList {
+		 margin: 0;
+	}
+}
+ @media only screen and (max-width: 375px) {
+	 .myslider .Section--spacingNormal .TestimonialList .Container .Testimonial__Content {
+		 font-size: 18px;
+		 line-height: normal;
+	}
+}
+ .drip-payment-badge {
+	 display: flex;
+	 max-width: 100%;
+	 flex-wrap: wrap;
+	 align-items: center;
+}
+ .drip-payment-badge .first-image {
+	 flex: 0 0 70%;
+	 max-width: 70%;
+	 padding-right: 5px;
+}
+ .drip-payment-badge .second-image {
+	 flex: 0 0 30%;
+	 padding-left: 5px;
+	 max-width: 30%;
+}
+ 
+  </style>
+  <script>
+    $(document).ready(function(){
+        if(window.innerWidth < 640){
+            $('.badges-stage').slick({
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                dots: true,
+                centerMode: true,
+                focusOnSelect: true
+            });
+        }
+    });
+  </script>
+  {% schema %}
+   {
+     "name":"Testimonial Cards",
+     "settings":[
+        {
+           "type":"text",
+           "id":"subtitle",
+           "label":"sub Title"
+        },
+        {
+           "type":"text",
+           "id":"title",
+           "label":"Title"
+        }
+     ],
+     "blocks":[
+        {
+           "type":"imagewithtext",
+           "name":"Image With Text",
+           "limit":3,
+           "settings":[
+              {
+                 "type":"image_picker",
+                 "id":"storyimg",
+                 "label":"Story Image"
+              },
+              {
+                 "type":"text",
+                 "id":"title",
+                 "label":"Title"
+              },
+              {
+                 "type":"text",
+                 "id":"subtitle",
+                 "label":"Sub Title"
+              }
+           ]
+        }
+     ],
+     "presets":[
+        {
+           "name":"Testimonial Cards",
+           "category":"Text"
+        }
+     ]
+  }
+  {% endschema %}
+  
+  {% stylesheet %}
+  {% endstylesheet %}
+  
+  {% javascript %}
+  {% endjavascript %}
+  
