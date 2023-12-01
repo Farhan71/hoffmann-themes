@@ -38,54 +38,52 @@ let blackFridaySnippet = () => {
     });
 
     waitForElement('.reduction-code span', (element) => {
-        const blackFridayText = document.querySelectorAll('.reduction-code span');
-        blackFridayText.forEach((item)=>{
-          if (item.textContent.includes('BLACKWEEK') && !document.querySelector('.black_firday_cheerTxt')) {
-              let cheerTxt = `<span style="color:#0F951C; font-weight:700;">Glückwunsch!</span> 🎉 Ihr <span style="color:#1E1E1E; font-weight:700;">
-                            20% Black Week-Rabatt</span> wurde erfolgreich aktiviert. (Nicht kombinierbar mit anderen Rabattcodes)`;
-  
-              waitForElement('.order-summary__section--product-list', (element) => {
-                  document.querySelector('.order-summary__section--product-list').insertAdjacentHTML('afterend', `<div class="black_firday_cheerTxt">${cheerTxt}</div>`);
-              })
-  
-              waitForElement('#checkout_reduction_code', (element) => {
-                  const discountField = document.querySelector('#checkout_reduction_code');
-                  //discountField.closest('.order-summary__section--discount').style.display = 'none';
-                  //discountField.closest('.order-summary__section--discount').remove();
-              });
-  
-              waitForElement('.section--reductions', (element) => {
-                  const discountField2 = document.querySelector('.section--reductions');
-                 // discountField2.style.display = 'none';
-                 // discountField2.remove();
-              });
-  
-  
-          }
-        });
+        const blackFridayText = document.querySelector('.reduction-code span');
+        if (blackFridayText && blackFridayText.textContent.includes('BLACKWEEK')) {
+            let cheerTxt = `<span style="color:#0F951C; font-weight:700;">Glückwunsch!</span> 🎉 Ihr <span style="color:#1E1E1E; font-weight:700;">
+                          20% Black Week-Rabatt</span> wurde erfolgreich aktiviert. (Nicht kombinierbar mit anderen Rabattcodes)`;
+
+            waitForElement('.order-summary__section--product-list', (element) => {
+                document.querySelector('.order-summary__section--product-list').insertAdjacentHTML('afterend', `<div class="black_firday_cheerTxt">${cheerTxt}</div>`);
+            })
+
+            waitForElement('#checkout_reduction_code', (element) => {
+                const discountField = document.querySelector('#checkout_reduction_code');
+                discountField.closest('.order-summary__section--discount').style.display = 'none';
+                discountField.closest('.order-summary__section--discount').remove();
+            });
+
+            waitForElement('.section--reductions', (element) => {
+                const discountField2 = document.querySelector('.section--reductions');
+                discountField2.style.display = 'none';
+                discountField2.remove();
+            });
+
+
+        }
     });
 
-    // waitForElement(".notice__text", (element) => {
+    waitForElement(".notice__text", (element) => {
         const noticeText = document.querySelector('.notice__text');
         if (noticeText && noticeText.innerHTML.includes('Der Rabatt wurde gestrichen')) {
             const notice = noticeText.closest('.notice');
             notice.style.display = 'none';
             notice.querySelector('.notice__controls').click();
         }
-    // })
+    })
 
     const errorCode = document.querySelector('#error-for-reduction_code');
     if (errorCode) {
         errorCode.style.display = 'none';
     }
 
-    // waitForElement("#checkout_reduction_code", (element) => {
+    waitForElement("#checkout_reduction_code", (element) => {
         let discountField = document.querySelector('#checkout_reduction_code');
         if (discountField) {
             discountField.style.borderColor = '#d4d1c9';
             discountField.style.boxShadow = 'unset';
         }
-    // })
+    })
 };
 blackFridaySnippet();
 </script>
